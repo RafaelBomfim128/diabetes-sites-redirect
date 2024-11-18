@@ -9,8 +9,12 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 function generateHtml(redirects) {
     const links = redirects.map(r => {
         const [path, url] = r.split(' ');
-        const displayPath = path.replace('/', ''); // Nome amigável para exibição
-        return `<li><a href="${path}" target="_blank">${displayPath}</a></li>`;
+        const displayPath = path.replace('/', '');
+        return `<li>
+            <span>${displayPath}</span>
+            <button onclick="window.open('${path}', '_blank')">Baixar</button>
+            <button onclick="copyLink('${path}')">Copiar Link</button>
+        </li>`;
     });
 
     return `<!DOCTYPE html>
@@ -29,15 +33,15 @@ function generateHtml(redirects) {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh; /* Garante que o rodapé fique no final */
+            min-height: 100vh;
         }
         .container {
             background-color: #fff;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 800px;  /* Limita a largura máxima do conteúdo */
-            width: 90%; /* Ocupa 90% da largura disponível, responsivo */
+            max-width: 800px;
+            width: 90%;
         }
         h1 {
             color: #0078d7;
@@ -53,46 +57,66 @@ function generateHtml(redirects) {
             padding: 0;
         }
         li {
-            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            transition: background-color 0.3s ease; /* Suaviza a transição de cor */
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px; /* Adiciona espaço entre os itens da lista */
         }
-        li:hover {
-            background-color: #f9f9f9;
+        li span {
+            flex-grow: 1;
+            margin-right: 10px;
         }
-        a {
-            text-decoration: none;
-            color: #0056b3; /* Cor do link mais escura */
-            font-weight: 500;
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0078d7;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
         }
-        a:hover {
-            text-decoration: underline;
+        button:hover {
+            background-color: #0056b3;
         }
         footer {
-           margin-top: auto; /* Importante para o rodapé ficar no final */
+           margin-top: auto;
            text-align: center;
            padding: 10px;
            font-size: smaller;
            color: #777;
         }
-
-
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Links do Diabetes</h1>
         <p>Escolha um dos links abaixo para baixar ou acessar ferramentas úteis:</p>
         <ul>
-    ${links.join('\n')}
+${links.join('\n')}
         </ul>
     </div>
+    <footer>
+        <p>Exemplo de Rodapé</p>
+    </footer>
+
+    <script>
+        function copyLink(link) {
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    alert("Link copiado para a área de transferência!");
+                })
+                .catch(err => {
+                    console.error("Falha ao copiar o link: ", err);
+                });
+        }
+    </script>
 </body>
-</html>
-    `;
+</html>`;
 }
 
 // Ler o arquivo _redirects
