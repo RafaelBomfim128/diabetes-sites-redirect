@@ -80,29 +80,24 @@
         <ul>
 <li>
             <span>xdrip</span>
-            <button onclick="window.open('/xdrip', '_blank')">Baixar</button>
-            <button onclick="copyLink('/xdrip')">Copiar Link</button>
-        </li>
+            <button onclick="window.open('https://github.com/NightscoutFoundation/xDrip/releases/download/2024.11.17/xDrip-plus-20241117-6fcec23.apk', '_blank')">Baixar</button>
+            <button onclick="copyLink('https://github.com/NightscoutFoundation/xDrip/releases/download/2024.11.17/xDrip-plus-20241117-6fcec23.apk', this)">Copiar Link</button> </li>
 <li>
             <span>aaps</span>
-            <button onclick="window.open('/aaps', '_blank')">Baixar</button>
-            <button onclick="copyLink('/aaps')">Copiar Link</button>
-        </li>
+            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
+            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
 <li>
             <span>link-numero-3</span>
-            <button onclick="window.open('/link-numero-3', '_blank')">Baixar</button>
-            <button onclick="copyLink('/link-numero-3')">Copiar Link</button>
-        </li>
+            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
+            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
 <li>
             <span>link-numero-4</span>
-            <button onclick="window.open('/link-numero-4', '_blank')">Baixar</button>
-            <button onclick="copyLink('/link-numero-4')">Copiar Link</button>
-        </li>
+            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
+            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
 <li>
             <span>link-numero-5</span>
-            <button onclick="window.open('/link-numero-5', '_blank')">Baixar</button>
-            <button onclick="copyLink('/link-numero-5')">Copiar Link</button>
-        </li>
+            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
+            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
         </ul>
     </div>
     <footer>
@@ -110,13 +105,29 @@
     </footer>
 
     <script>
-        function copyLink(link) {
+        function copyLink(link, button) { // Adicione o parâmetro 'button'
             navigator.clipboard.writeText(link)
                 .then(() => {
-                    alert("Link copiado para a área de transferência!");
+                    // Muda o estilo do botão
+                    button.style.backgroundColor = "green";
+                    button.textContent = "Link copiado!";
+
+                    // Reverte o estilo após 3 segundos
+                    setTimeout(() => {
+                        button.style.backgroundColor = ""; // Volta para a cor original do CSS
+                        button.textContent = "Copiar Link";
+                    }, 3000);
                 })
                 .catch(err => {
-                    console.error("Falha ao copiar o link: ", err);
+                    console.error("Falha ao copiar: ", err);
+                    // Opcional: indicar erro no botão (exemplo)
+                    button.style.backgroundColor = "red";
+                    button.textContent = "Erro!";
+                    setTimeout(() => {
+                        button.style.backgroundColor = "";
+                        button.textContent = "Copiar Link";
+                    }, 3000);
+
                 });
         }
     </script>
