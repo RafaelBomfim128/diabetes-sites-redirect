@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adicionar Link</title>
+</head>
+<body>
+  <h1>Adicionar Novo Link</h1>
+  <form id="link-form">
+    <label for="path">Caminho (ex: /xdrip):</label><br>
+    <input type="text" id="path" name="path" required><br><br>
+
+    <label for="url">URL de Redirecionamento:</label><br>
+    <input type="url" id="url" name="url" required><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    document.getElementById('link-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const path = document.getElementById('path').value;
+      const url = document.getElementById('url').value;
+
+      try {
+        const response = await fetch('/.netlify/functions/add-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path, url }),
+        });
+
+        if (response.ok) {
+          alert('Link adicionado com sucesso!');
+        } else {
+          alert('Erro ao adicionar o link.');
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro de conexão.');
+      }
+    });
+  </script>
+</body>
+</html>
