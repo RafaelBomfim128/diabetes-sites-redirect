@@ -8,14 +8,14 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 // Função para gerar HTML
 function generateHtml(redirects) {
     const links = redirects.map(r => {
-        const [path, url] = r.split(' ');
+        const [path, fullUrl] = r.split(' ');
         const displayPath = path.replace('/', '');
         return `<li>
             <span>${displayPath}</span>
-            <button onclick="window.open('${path}', '_blank')">Baixar</button>
-            <button onclick="copyLink('${path}')">Copiar Link</button>
-        </li>`;
+            <button onclick="window.open('${fullUrl ? fullUrl : path}', '_blank')">Baixar</button>
+            <button onclick="copyLink('${fullUrl ? fullUrl : path}', this)">Copiar Link</button> </li>`; // Passe 'this' (o botão) para a função
     });
+
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -105,13 +105,29 @@ ${links.join('\n')}
     </footer>
 
     <script>
-        function copyLink(link) {
+        function copyLink(link, button) { // Adicione o parâmetro 'button'
             navigator.clipboard.writeText(link)
                 .then(() => {
-                    alert("Link copiado para a área de transferência!");
+                    // Muda o estilo do botão
+                    button.style.backgroundColor = "green";
+                    button.textContent = "Link copiado!";
+
+                    // Reverte o estilo após 3 segundos
+                    setTimeout(() => {
+                        button.style.backgroundColor = ""; // Volta para a cor original do CSS
+                        button.textContent = "Copiar Link";
+                    }, 3000);
                 })
                 .catch(err => {
-                    console.error("Falha ao copiar o link: ", err);
+                    console.error("Falha ao copiar: ", err);
+                    // Opcional: indicar erro no botão (exemplo)
+                    button.style.backgroundColor = "red";
+                    button.textContent = "Erro!";
+                    setTimeout(() => {
+                        button.style.backgroundColor = "";
+                        button.textContent = "Copiar Link";
+                    }, 3000);
+
                 });
         }
     </script>
