@@ -90,10 +90,6 @@ function generateHtml(redirects) {
     ${links.join('\n')}
         </ul>
     </div>
-
-    <footer>
-        <p>Exemplo de Rodapé</p>
-    </footer>
 </body>
 </html>
     `;
