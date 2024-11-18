@@ -9,40 +9,90 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 function generateHtml(redirects) {
     const links = redirects.map(r => {
         const [path, url] = r.split(' ');
-        return `        <li><a href="${path}" target="_blank">${path.replace('/', '')}</a></li>`;
+        return `
+        <li>
+            <a href="${url}" target="_blank">${path.replace('/', '')}</a>
+        </li>`;
     });
 
     return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Links do Diabetes</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 0;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e6f0ff;
             color: #333;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
         }
         h1 {
-            color: #0078d7;
+            color: #0066cc;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+            text-align: center;
         }
         ul {
             list-style-type: none;
+            width: 100%;
+            max-width: 600px;
             padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         li {
+            width: 100%;
             margin: 10px 0;
+            display: flex;
+            justify-content: center;
         }
         a {
+            font-size: 1.1rem;
+            color: #0066cc;
             text-decoration: none;
-            color: #0078d7;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
         a:hover {
-            text-decoration: underline;
+            background-color: #007bff;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            a {
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
         }
     </style>
 </head>
