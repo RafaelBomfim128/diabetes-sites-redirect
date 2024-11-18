@@ -2,9 +2,8 @@ name: Generate Index on Redirects Change
 
 on:
   push:
-    paths:
-      - _redirects # Apenas dispara se _redirects generate-index forem alterados
-      - generate-index.js
+    branches:
+      - main
 
 permissions:
   contents: write # Permissão para fazer commit e push
