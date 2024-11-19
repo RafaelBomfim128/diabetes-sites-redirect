@@ -34,6 +34,6 @@ jobs:
 
     - name: Fazer deploy para o Netlify
       run: |
-        netlify deploy --prod --dir=./build  # Altere o diretório para onde seu site é gerado
+        netlify deploy --prod --dir=./  # Altere o diretório para onde seu site é gerado
       env:
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}  # Usando o token do Netlify
