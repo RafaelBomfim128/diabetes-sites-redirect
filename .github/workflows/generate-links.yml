@@ -1,6 +1,5 @@
 name: Gerar Links
 
-# Este workflow será iniciado manualmente
 on:
   workflow_dispatch:
 
@@ -24,8 +23,17 @@ jobs:
       run: echo "NODE_ENV=production" >> $GITHUB_ENV  # Definir NODE_ENV como 'production'
 
     - name: Executar o script generate-index.js
-      run: node generate-index.js  # Executa o script para gerar os links
+      run: node generate-index.js
       env:
         GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}  # Definindo a ID da planilha via Secrets
         GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}  # Definindo as credenciais via Secrets
         NODE_ENV: ${{ env.NODE_ENV }}
+
+    - name: Instalar Netlify CLI
+      run: npm install -g netlify-cli
+
+    - name: Fazer deploy para o Netlify
+      run: |
+        netlify deploy --prod --dir=./build  # Altere o diretório para onde seu site é gerado
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}  # Usando o token do Netlify
