@@ -23,7 +23,6 @@ const auth = new google.auth.GoogleAuth({
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
-// Obter o ID da planilha
 let spreadsheetId;
 if (environment === 'production') {
     spreadsheetId = process.env.GOOGLE_SHEET_ID;
@@ -34,6 +33,12 @@ if (environment === 'production') {
 if (!spreadsheetId) {
     throw new Error('O ID da planilha (GOOGLE_SHEET_ID) não foi definido nas variáveis de ambiente.');
 }
+
+// Intervalos de leitura
+const ranges = {
+    downloads: 'Downloads!A:D',
+    tutoriais: 'Tutoriais!A:D',
+};
 
 // Função para formatar o caminho curto
 function formatPath(shortPath) {
@@ -46,13 +51,9 @@ function formatPath(shortPath) {
 
 // Função para gerar HTML de uma seção
 function generateSectionHtml(title, links) {
-    const linksWithNewLink = links.map(([title, shortPath, fullUrl]) => {
-        const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`;
-        return [title, shortPath, fullUrl, newLink];
-    });
-
-    const htmlLinks = linksWithNewLink.map(([title, shortPath, fullUrl, newLink]) => {
-        return `<li>
+    const htmlLinks = links.map(([title, shortPath, fullUrl, newLink]) => {
+        return `
+        <li>
             <span>${title}</span>
             <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
             <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
@@ -60,95 +61,145 @@ function generateSectionHtml(title, links) {
     });
 
     return `
-        <section>
-            <h2>${title}</h2>
-            <ul>
-                ${htmlLinks.join('\n')}
-            </ul>
-        </section>
-    `;
+    <section>
+        <h2>${title}</h2>
+        <ul>${htmlLinks.join('\n')}</ul>
+    </section>`;
 }
 
 // Função para gerar HTML completo
-function generateHtml(downloadLinks, tutorialLinks) {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Links do Diabetes</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; color: #333; }
-        .container { background-color: #fff; padding: 30px; border-radius: 8px; max-width: 800px; margin: auto; }
-        h1, h2 { text-align: center; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; display: flex; justify-content: space-between; }
-        button { padding: 8px 12px; background-color: #0078d7; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        footer { text-align: center; margin-top: 20px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Links do Diabetes</h1>
-        ${generateSectionHtml('Downloads', downloadLinks)}
-        ${generateSectionHtml('Tutoriais', tutorialLinks)}
-    </div>
-    <footer>Exemplo de Rodapé</footer>
-    <script>
-        function copyLink(link, button) {
-            navigator.clipboard.writeText(link)
-                .then(() => {
-                    button.style.backgroundColor = "green";
-                    button.textContent = "Link copiado!";
-                    setTimeout(() => { button.style.backgroundColor = ""; button.textContent = "Copiar Link"; }, 3000);
-                })
-                .catch(() => { button.style.backgroundColor = "red"; button.textContent = "Erro!"; });
-        }
-    </script>
-</body>
-</html>`;
+function generateHtml(data) {
+    const sectionsHtml = Object.entries(data).map(([sectionTitle, links]) => 
+        generateSectionHtml(sectionTitle, links)
+    );
+
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Links do Diabetes</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f4f4f4;
+                color: #333;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+            }
+            .container {
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                max-width: 800px;
+                width: 90%;
+            }
+            h1, h2 {
+                color: #0078d7;
+                text-align: center;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            li {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+            li span {
+                flex-grow: 1;
+                margin-right: 10px;
+            }
+            button {
+                padding: 8px 12px;
+                border: none;
+                border-radius: 5px;
+                background-color: #0078d7;
+                color: white;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Links do Diabetes</h1>
+            ${sectionsHtml.join('\n')}
+        </div>
+        <script>
+            function copyLink(link, button) {
+                navigator.clipboard.writeText(link)
+                    .then(() => {
+                        button.style.backgroundColor = "green";
+                        button.textContent = "Link copiado!";
+                        setTimeout(() => {
+                            button.style.backgroundColor = "";
+                            button.textContent = "Copiar Link";
+                        }, 3000);
+                    })
+                    .catch(err => {
+                        console.error("Erro ao copiar: ", err);
+                        button.style.backgroundColor = "red";
+                        button.textContent = "Erro!";
+                        setTimeout(() => {
+                            button.style.backgroundColor = "";
+                            button.textContent = "Copiar Link";
+                        }, 3000);
+                    });
+            }
+        </script>
+    </body>
+    </html>`;
 }
 
 // Função principal
 async function main() {
     const sheets = google.sheets({ version: 'v4', auth });
+    const data = {};
 
-    // Obter dados das abas "Downloads" e "Tutoriais"
-    const [downloadsRes, tutorialsRes] = await Promise.all([
-        sheets.spreadsheets.values.get({ spreadsheetId, range: 'Downloads!A:D' }),
-        sheets.spreadsheets.values.get({ spreadsheetId, range: 'Tutoriais!A:D' }),
-    ]);
-
-    const downloads = downloadsRes.data.values || [];
-    const tutorials = tutorialsRes.data.values || [];
-
-    // Remover cabeçalhos
-    const downloadLinks = downloads.slice(1).filter(row => row[0] && row[1] && row[2]);
-    const tutorialLinks = tutorials.slice(1).filter(row => row[0] && row[1] && row[2]);
-
-    // Atualizar as colunas "Novo link"
-    const updateLinks = async (range, links) => {
-        const newLinks = links.map(([_, shortPath]) => [`https://diabetesdm1.netlify.app/${formatPath(shortPath)}`]);
-        await sheets.spreadsheets.values.update({
+    for (const [section, range] of Object.entries(ranges)) {
+        const res = await sheets.spreadsheets.values.get({
             spreadsheetId,
             range,
-            valueInputOption: 'RAW',
-            requestBody: { values: newLinks },
         });
-    };
 
-    await Promise.all([
-        updateLinks('Downloads!D2:D', downloadLinks),
-        updateLinks('Tutoriais!D2:D', tutorialLinks),
-    ]);
+        const rows = res.data.values;
+        if (!rows || !rows.length) {
+            console.error(`Nenhum dado encontrado para ${section}.`);
+            data[section] = [];
+            continue;
+        }
 
-    console.log('Planilhas atualizadas!');
+        const links = rows.slice(1).map(([title, shortPath, fullUrl]) => {
+            const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`;
+            return [title, shortPath, fullUrl, newLink];
+        });
 
-    // Gerar arquivos
-    const htmlContent = generateHtml(downloadLinks, tutorialLinks);
+        data[section] = links;
+    }
+
+    const htmlContent = generateHtml({
+        Downloads: data.downloads,
+        Tutoriais: data.tutoriais,
+    });
+
     fs.writeFileSync(outputHtmlFile, htmlContent);
     console.log('index.html gerado com sucesso!');
 }
 
+// Execute o script
 main().catch(console.error);
