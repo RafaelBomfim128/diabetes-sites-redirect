@@ -4,9 +4,13 @@
   "description": "",
   "main": "generate-index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "NODE_ENV=development node generate-index.js",
+    "prod": "NODE_ENV=production node generate-index.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "^144.0.0"
+  }
 }

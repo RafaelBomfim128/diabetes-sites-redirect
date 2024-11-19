@@ -1,21 +1,75 @@
 const fs = require('fs');
 const path = require('path');
+const { google } = require('googleapis');
 
 // Caminhos dos arquivos
 const redirectsFile = path.join(__dirname, '_redirects');
 const outputHtmlFile = path.join(__dirname, 'index.html');
 
+let environment = process.env.NODE_ENV === 'production'
+
+// Carregar as credenciais dependendo do ambiente
+let credentials;
+if (environment === 'production') {
+    // Quando estiver no GitHub ou ambiente de produção, carrega as credenciais do ambiente
+    credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+} else {
+    // Quando estiver localmente, carrega o arquivo JSON das credenciais
+    credentials = require('./env/credentials.json');
+}
+
+// Configure a autenticação
+const auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
+// Obter o ID da planilha das variáveis de ambiente
+let spreadsheetId
+if (environment === 'production') {
+    spreadsheetId = process.env.GOOGLE_SHEET_ID;
+} else {
+    spreadsheetId = fs.readFileSync('./env/sheet-id.txt', 'utf-8').trim();
+}
+
+if (!spreadsheetId) {
+    throw new Error('O ID da planilha (GOOGLE_SHEET_ID) não foi definido nas variáveis de ambiente.');
+}
+
+// Intervalo de leitura e escrita
+const readRange = 'Página1!A:D'; // Inclui a coluna "Novo link"
+
+// Função para formatar o caminho curto
+function formatPath(shortPath) {
+    return shortPath
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, '-') // Substituir espaços por traços
+        .replace(/[^a-z0-9\-]/g, ''); // Remover caracteres inválidos
+}
+
+// Função para gerar o conteúdo do arquivo _redirects
+function generateRedirects(links) {
+    return links.map(([title, shortPath, fullUrl, newLink]) => {
+        const formattedPath = formatPath(shortPath);
+        return `/${formattedPath} ${fullUrl}`;
+    }).join('\n');
+}
+
 // Função para gerar HTML
-function generateHtml(redirects) {
-    const links = redirects.map(r => {
-        const [path, fullUrl] = r.split(' ');
-        const displayPath = path.replace('/', '');
-        return `<li>
-            <span>${displayPath}</span>
-            <button onclick="window.open('${fullUrl ? fullUrl : path}', '_blank')">Baixar</button>
-            <button onclick="copyLink('${fullUrl ? fullUrl : path}', this)">Copiar Link</button> </li>`; // Passe 'this' (o botão) para a função
+function generateHtml(links) {
+    const linksWithNewLink = links.map(([title, shortPath, fullUrl]) => {
+        const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`; // Gerar novo link
+        return [title, shortPath, fullUrl, newLink]; // Adicionar newLink no array
     });
 
+    const htmlLinks = linksWithNewLink.map(([title, shortPath, fullUrl, newLink]) => {
+        return `<li>
+            <span>${title}</span> <!-- Exibe o título (coluna A) -->
+            <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
+            <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
+        </li>`;
+    });
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -64,7 +118,7 @@ function generateHtml(redirects) {
             border: 1px solid #ddd;
             border-radius: 5px;
             transition: background-color 0.3s ease;
-            margin-bottom: 10px; /* Adiciona espaço entre os itens da lista */
+            margin-bottom: 10px;
         }
         li span {
             flex-grow: 1;
@@ -97,37 +151,31 @@ function generateHtml(redirects) {
         <h1>Links do Diabetes</h1>
         <p>Escolha um dos links abaixo para baixar ou acessar ferramentas úteis:</p>
         <ul>
-${links.join('\n')}
+${htmlLinks.join('\n')}
         </ul>
     </div>
     <footer>
         <p>Exemplo de Rodapé</p>
     </footer>
-
     <script>
-        function copyLink(link, button) { // Adicione o parâmetro 'button'
+        function copyLink(link, button) {
             navigator.clipboard.writeText(link)
                 .then(() => {
-                    // Muda o estilo do botão
                     button.style.backgroundColor = "green";
                     button.textContent = "Link copiado!";
-
-                    // Reverte o estilo após 3 segundos
                     setTimeout(() => {
-                        button.style.backgroundColor = ""; // Volta para a cor original do CSS
+                        button.style.backgroundColor = "";
                         button.textContent = "Copiar Link";
                     }, 3000);
                 })
                 .catch(err => {
                     console.error("Falha ao copiar: ", err);
-                    // Opcional: indicar erro no botão (exemplo)
                     button.style.backgroundColor = "red";
                     button.textContent = "Erro!";
                     setTimeout(() => {
                         button.style.backgroundColor = "";
                         button.textContent = "Copiar Link";
                     }, 3000);
-
                 });
         }
     </script>
@@ -135,22 +183,54 @@ ${links.join('\n')}
 </html>`;
 }
 
-// Ler o arquivo _redirects
-fs.readFile(redirectsFile, 'utf-8', (err, data) => {
-    if (err) {
-        console.error('Erro ao ler o arquivo _redirects:', err);
+// Função para atualizar a coluna "Novo link" na planilha
+async function updateShortLinks(sheets, links) {
+    const newLinks = links.map(([_, shortPath]) => {
+        const formattedPath = formatPath(shortPath);
+        return [`https://diabetesdm1.netlify.app/${formattedPath}`];
+    });
+
+    await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: 'Página1!D2:D',
+        valueInputOption: 'RAW',
+        requestBody: {
+            values: newLinks,
+        },
+    });
+
+    console.log('Planilha atualizada com os novos links na coluna D!');
+}
+
+// Função principal
+async function main() {
+    const sheets = google.sheets({ version: 'v4', auth });
+    const res = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: readRange,
+    });
+
+    const rows = res.data.values;
+    if (!rows || !rows.length) {
+        console.error('Nenhum dado encontrado na planilha.');
         return;
     }
 
-    const redirects = data.split('\n').filter(line => line.trim() !== '' && !line.startsWith('#'));
-    const htmlContent = generateHtml(redirects);
+    const links = rows.slice(1);
 
-    // Salvar o index.html
-    fs.writeFile(outputHtmlFile, htmlContent, err => {
-        if (err) {
-            console.error('Erro ao salvar o arquivo index.html:', err);
-        } else {
-            console.log('index.html gerado com sucesso!');
-        }
-    });
-});
+    // Atualizar a coluna "Novo link"
+    await updateShortLinks(sheets, links);
+
+    // Gerar arquivo _redirects
+    const redirectsContent = generateRedirects(links);
+    fs.writeFileSync(redirectsFile, redirectsContent);
+    console.log('_redirects gerado com sucesso!');
+
+    // Gerar arquivo HTML
+    const htmlContent = generateHtml(links);
+    fs.writeFileSync(outputHtmlFile, htmlContent);
+    console.log('index.html gerado com sucesso!');
+}
+
+// Execute o script
+main().catch(console.error);

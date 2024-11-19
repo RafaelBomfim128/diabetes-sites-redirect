@@ -45,7 +45,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             transition: background-color 0.3s ease;
-            margin-bottom: 10px; /* Adiciona espaço entre os itens da lista */
+            margin-bottom: 10px;
         }
         li span {
             flex-grow: 1;
@@ -79,55 +79,44 @@
         <p>Escolha um dos links abaixo para baixar ou acessar ferramentas úteis:</p>
         <ul>
 <li>
-            <span>xdrip</span>
-            <button onclick="window.open('https://github.com/NightscoutFoundation/xDrip/releases/download/2024.11.17/xDrip-plus-20241117-6fcec23.apk', '_blank')">Baixar</button>
-            <button onclick="copyLink('https://github.com/NightscoutFoundation/xDrip/releases/download/2024.11.17/xDrip-plus-20241117-6fcec23.apk', this)">Copiar Link</button> </li>
+            <span>xDrip</span> <!-- Exibe o título (coluna A) -->
+            <button onclick="window.open('https://github.com/NightscoutFoundation/xDrip/releases/download/2024.11.17/xDrip-plus-20241117-6fcec23.apk', '_blank')">Acessar</button>
+            <button onclick="copyLink('https://diabetesdm1.netlify.app/xdrip', this)">Copiar Link</button>
+        </li>
 <li>
-            <span>aaps</span>
-            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
-            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
+            <span>teste link</span> <!-- Exibe o título (coluna A) -->
+            <button onclick="window.open('https://google.com.br', '_blank')">Acessar</button>
+            <button onclick="copyLink('https://diabetesdm1.netlify.app/teste-link', this)">Copiar Link</button>
+        </li>
 <li>
-            <span>link-numero-3</span>
-            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
-            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
-<li>
-            <span>link-numero-4</span>
-            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
-            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
-<li>
-            <span>link-numero-5</span>
-            <button onclick="window.open('https://google.com.br', '_blank')">Baixar</button>
-            <button onclick="copyLink('https://google.com.br', this)">Copiar Link</button> </li>
+            <span>Outro Link aqui</span> <!-- Exibe o título (coluna A) -->
+            <button onclick="window.open('https://google.com.br', '_blank')">Acessar</button>
+            <button onclick="copyLink('https://diabetesdm1.netlify.app/outro-link-aqui', this)">Copiar Link</button>
+        </li>
         </ul>
     </div>
     <footer>
         <p>Exemplo de Rodapé</p>
     </footer>
-
     <script>
-        function copyLink(link, button) { // Adicione o parâmetro 'button'
+        function copyLink(link, button) {
             navigator.clipboard.writeText(link)
                 .then(() => {
-                    // Muda o estilo do botão
                     button.style.backgroundColor = "green";
                     button.textContent = "Link copiado!";
-
-                    // Reverte o estilo após 3 segundos
                     setTimeout(() => {
-                        button.style.backgroundColor = ""; // Volta para a cor original do CSS
+                        button.style.backgroundColor = "";
                         button.textContent = "Copiar Link";
                     }, 3000);
                 })
                 .catch(err => {
                     console.error("Falha ao copiar: ", err);
-                    // Opcional: indicar erro no botão (exemplo)
                     button.style.backgroundColor = "red";
                     button.textContent = "Erro!";
                     setTimeout(() => {
                         button.style.backgroundColor = "";
                         button.textContent = "Copiar Link";
                     }, 3000);
-
                 });
         }
     </script>

@@ -1,0 +1,31 @@
+name: Gerar Links
+
+# Este workflow será iniciado manualmente
+on:
+  workflow_dispatch:
+
+jobs:
+  generate_links:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out o código
+      uses: actions/checkout@v3
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Instalar dependências
+      run: npm install
+
+    - name: Definir variáveis de ambiente
+      run: echo "NODE_ENV=production" >> $GITHUB_ENV  # Definir NODE_ENV como 'production'
+
+    - name: Executar o script generate-index.js
+      run: node generate-index.js  # Executa o script para gerar os links
+      env:
+        GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}  # Definindo a ID da planilha via Secrets
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}  # Definindo as credenciais via Secrets
+        NODE_ENV: ${{ env.NODE_ENV }}
