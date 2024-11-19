@@ -38,7 +38,7 @@ if (!spreadsheetId) {
 }
 
 // Intervalo de leitura e escrita
-const readRange = 'Página1!A:D'; // Inclui a coluna "Novo link"
+const readRange = 'Downloads!A:D'; // Inclui a coluna "Novo link"
 
 // Função para formatar o caminho curto
 function formatPath(shortPath) {
