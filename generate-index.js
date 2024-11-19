@@ -144,7 +144,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
         ${generateSection('Tutoriais', tutorialLinks)}
     </div>
     <footer>
-        <p>Exemplo de Rodapé</p>
+        <p>Copyright © 2024 Equipe Milton Leão. Todos os direitos reservados.</p>
     </footer>
     <script>
         function copyLink(link, button) {
