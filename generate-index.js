@@ -198,7 +198,7 @@ async function updateShortLinks(sheets, links) {
     // Atualizar a planilha apenas com os valores processados
     await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: 'Página1!D2:D',
+        range: 'Downloads1!D2:D',
         valueInputOption: 'RAW',
         requestBody: {
             values: updatedLinks,
@@ -243,7 +243,7 @@ async function main() {
     // Atualizar a coluna "Novo link" (D)
     await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: 'Página1!D2:D',
+        range: 'Downloads!D2:D',
         valueInputOption: 'RAW',
         requestBody: {
             values: updatedLinks,
