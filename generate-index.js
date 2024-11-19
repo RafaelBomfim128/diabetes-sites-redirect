@@ -184,23 +184,28 @@ ${htmlLinks.join('\n')}
 </html>`;
 }
 
-// Função para atualizar a coluna "Novo link" na planilha
+// Atualizar a coluna "Novo link" na planilha com verificação de valores ausentes
 async function updateShortLinks(sheets, links) {
-    const newLinks = links.map(([_, shortPath]) => {
+    const updatedLinks = links.map(([title, shortPath, fullUrl]) => {
+        if (!title || !shortPath || !fullUrl) {
+            // Retorna um valor vazio para linhas incompletas
+            return [''];
+        }
         const formattedPath = formatPath(shortPath);
         return [`https://diabetesdm1.netlify.app/${formattedPath}`];
     });
 
+    // Atualizar a planilha apenas com os valores processados
     await sheets.spreadsheets.values.update({
         spreadsheetId,
         range: 'Página1!D2:D',
         valueInputOption: 'RAW',
         requestBody: {
-            values: newLinks,
+            values: updatedLinks,
         },
     });
 
-    console.log('Planilha atualizada com os novos links na coluna D!');
+    console.log('Planilha atualizada! Linhas incompletas foram limpas.');
 }
 
 // Função principal
@@ -217,21 +222,50 @@ async function main() {
         return;
     }
 
+    // Remove o cabeçalho e processa as linhas restantes
     const links = rows.slice(1);
 
-    // Atualizar a coluna "Novo link"
-    await updateShortLinks(sheets, links);
+    // Filtrar apenas as linhas válidas
+    const validLinks = [];
+    const updatedLinks = links.map((row, index) => {
+        const [title, shortPath, fullUrl, newLink] = row;
+
+        // Checar se as colunas A, B e C estão preenchidas
+        if (title && shortPath && fullUrl) {
+            validLinks.push([title, shortPath, fullUrl]);
+            return [`https://diabetesdm1.netlify.app/${formatPath(shortPath)}`]; // Gera o link
+        } else {
+            // Se faltar valor em A, B ou C, limpa o link na coluna D
+            return [''];
+        }
+    });
+
+    // Atualizar a coluna "Novo link" (D)
+    await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: 'Página1!D2:D',
+        valueInputOption: 'RAW',
+        requestBody: {
+            values: updatedLinks,
+        },
+    });
+
+    console.log('Planilha atualizada com os novos links na coluna D!');
 
     // Gerar arquivo _redirects
-    const redirectsContent = generateRedirects(links);
+    const redirectsContent = generateRedirects(validLinks);
     fs.writeFileSync(redirectsFile, redirectsContent);
     console.log('_redirects gerado com sucesso!');
 
     // Gerar arquivo HTML
-    const htmlContent = generateHtml(links);
+    const htmlContent = generateHtml(validLinks);
     fs.writeFileSync(outputHtmlFile, htmlContent);
     console.log('index.html gerado com sucesso!');
 }
+
+// Execute o script
+main().catch(console.error);
+
 
 // Execute o script
 main().catch(console.error);
