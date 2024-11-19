@@ -23,17 +23,15 @@ jobs:
       run: echo "NODE_ENV=production" >> $GITHUB_ENV  # Definir NODE_ENV como 'production'
 
     - name: Executar o script generate-index.js
-      run: node generate-index.js
+      run: node generate-index.js  # Executa o script para gerar os links
       env:
         GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}  # Definindo a ID da planilha via Secrets
         GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}  # Definindo as credenciais via Secrets
         NODE_ENV: ${{ env.NODE_ENV }}
 
-    - name: Instalar Netlify CLI
-      run: npm install -g netlify-cli
-
-    - name: Fazer deploy para o Netlify
+    - name: Linkar o diretório com o site Netlify
       run: |
-        netlify deploy --prod --dir=./  # Altere o diretório para onde seu site é gerado
+        netlify link --id ${{ secrets.NETLIFY_SITE_ID }}  # Linka o diretório ao site Netlify
+        netlify deploy --prod --dir=./  # Faz o deploy
       env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}  # Usando o token do Netlify
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}  # Usando o token de autenticação do Netlify
