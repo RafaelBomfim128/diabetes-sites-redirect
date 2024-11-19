@@ -6,13 +6,14 @@ const { google } = require('googleapis');
 const redirectsFile = path.join(__dirname, '_redirects');
 const outputHtmlFile = path.join(__dirname, 'index.html');
 
-let environment = process.env.NODE_ENV === 'production'
+let environment = process.env.NODE_ENV
 
 // Carregar as credenciais dependendo do ambiente
 let credentials;
 if (environment === 'production') {
     // Quando estiver no GitHub ou ambiente de produção, carrega as credenciais do ambiente
-    credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+    const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
+    credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
 } else {
     // Quando estiver localmente, carrega o arquivo JSON das credenciais
     credentials = require('./env/credentials.json');
