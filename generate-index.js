@@ -116,9 +116,9 @@ function generateHtml(downloadLinks, tutorialLinks) {
         li span {
             flex-grow: 1; /* Garante que o texto ocupe o espaço restante */
             margin-right: 10px;
-            white-space: nowrap; /* Evita quebra de linha no texto */
+            white-space: normal; /* Permite que o texto quebre para a próxima linha */
             overflow: hidden;
-            text-overflow: ellipsis; /* Adiciona reticências se o texto for muito longo */
+            text-overflow: ellipsis; /* Adiciona reticências somente se necessário */
         }
         button {
             padding: 8px 12px;
