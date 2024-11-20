@@ -74,6 +74,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Links do Diabetes</title>
+    <link rel="icon" href="https://drive.google.com/uc?id=1nPPLItfOI6G7_TSBWqBcv7WZ-M1Brjb2" type="image/png">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
