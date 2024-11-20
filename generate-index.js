@@ -172,28 +172,61 @@ function generateHtml(downloadLinks, tutorialLinks) {
 </html>`;
 }
 
+// Atualizar a coluna "Novo link" na planilha com os valores gerados
+async function updateShortLinks(sheets, links) {
+    const updatedLinks = links.map(([title, shortPath, fullUrl]) => {
+        if (title && shortPath && fullUrl) {
+            const formattedPath = formatPath(shortPath);
+            return [`https://diabetesdm1.netlify.app/${formattedPath}`];
+        } else {
+            // Retorna um valor vazio para linhas incompletas
+            return [''];
+        }
+    });
+
+    // Atualizar a planilha com os valores processados
+    await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: 'Downloads!D2:D',
+        valueInputOption: 'RAW',
+        requestBody: {
+            values: updatedLinks,
+        },
+    });
+
+    console.log('Coluna D da planilha atualizada com os novos links!');
+}
+
 // Função principal
 async function main() {
     const sheets = google.sheets({ version: 'v4', auth });
+    const res = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: readRange,
+    });
 
-    const readSheetData = async (range) => {
-        const res = await sheets.spreadsheets.values.get({
-            spreadsheetId,
-            range,
-        });
-        return res.data.values ? res.data.values.slice(1) : [];
-    };
+    const rows = res.data.values;
+    if (!rows || !rows.length) {
+        console.error('Nenhum dado encontrado na planilha.');
+        return;
+    }
 
-    const downloads = await readSheetData('Downloads!A:C');
-    const tutorials = await readSheetData('Tutoriais!A:C');
+    // Remove o cabeçalho e processa as linhas restantes
+    const links = rows.slice(1);
 
-    // Gerar _redirects
-    const redirectsContent = `${generateRedirects(downloads)}\n${generateRedirects(tutorials)}`;
+    // Atualizar a coluna "Novo link" (D) com os valores formatados
+    await updateShortLinks(sheets, links);
+
+    // Filtrar apenas as linhas válidas para os arquivos locais
+    const validLinks = links.filter(([title, shortPath, fullUrl]) => title && shortPath && fullUrl);
+
+    // Gerar arquivo _redirects
+    const redirectsContent = generateRedirects(validLinks);
     fs.writeFileSync(redirectsFile, redirectsContent);
     console.log('_redirects gerado com sucesso!');
 
-    // Gerar index.html
-    const htmlContent = generateHtml(downloads, tutorials);
+    // Gerar arquivo HTML
+    const htmlContent = generateHtml(validLinks);
     fs.writeFileSync(outputHtmlFile, htmlContent);
     console.log('index.html gerado com sucesso!');
 }
