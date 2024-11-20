@@ -242,4 +242,7 @@ async function main() {
 }
 
 // Execute o script
-main().catch(console.error);
+main().catch(error => {
+    console.error("Erro durante a execução do script:", error);
+    process.exit(1); // Indica falha para o ambiente
+});
