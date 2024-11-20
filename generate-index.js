@@ -201,7 +201,6 @@ async function updateSheetLinks(sheets, sheetName, links) {
 
 // Função principal
 async function main() {
-    process.exit(1); //Falha proposital
     const sheets = google.sheets({ version: 'v4', auth });
 
     const readSheetData = async (range) => {
