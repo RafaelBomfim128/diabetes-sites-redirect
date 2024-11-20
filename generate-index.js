@@ -36,16 +36,17 @@ function formatPath(shortPath) {
     return shortPath
         .trim()
         .toLowerCase()
-        .replace(/\s+/g, '-') 
+        .replace(/\s+/g, '-')
         .replace(/[^a-z0-9\-]/g, '');
 }
 
 // Função para gerar o conteúdo do arquivo _redirects
 function generateRedirects(links) {
     return links
-        .map(([title, shortPath, fullUrl]) => `${formatPath(shortPath)} ${fullUrl}`)
+        .map(([title, shortPath, fullUrl]) => `${formatPath(shortPath)}  ${fullUrl}  200`)
         .join('\n');
 }
+
 
 // Função para gerar HTML
 function generateHtml(downloadLinks, tutorialLinks) {
@@ -54,18 +55,17 @@ function generateHtml(downloadLinks, tutorialLinks) {
             <h2>${title}</h2>
             <ul>
                 ${links
-                    .map(([title, shortPath, fullUrl]) => {
-                        const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`;
-                        return `
+                    .map(([title, shortPath, fullUrl, newLink]) => `
                             <li>
                                 <span>${title}</span>
                                 <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
                                 <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
-                            </li>`;
-                    })
-                    .join('')}
+                            </li>`)
+                            .join('')}
+
             </ul>
         </section>`;
+
 
     return `
 <!DOCTYPE html>
@@ -172,6 +172,28 @@ function generateHtml(downloadLinks, tutorialLinks) {
 </html>`;
 }
 
+async function updateSheetLinks(sheets, sheetName, links) {
+    const updatedLinks = links.map(([title, shortPath, fullUrl]) => {
+        if (!title || !shortPath || !fullUrl) {
+            return ['']; // Retorna vazio para linhas incompletas
+        }
+        const formattedPath = formatPath(shortPath);
+        return [`https://diabetesdm1.netlify.app/${formattedPath}`]; // Adiciona o novo link
+    });
+
+    await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: `${sheetName}!D2:D`, // Coluna D na respectiva aba
+        valueInputOption: 'USER_ENTERED',  //USER_ENTERED para fórmulas e links
+        requestBody: {
+            values: updatedLinks,
+        },
+    });
+
+    console.log(`Planilha ${sheetName} atualizada com os novos links na coluna D!`);
+}
+
+
 // Função principal
 async function main() {
     const sheets = google.sheets({ version: 'v4', auth });
@@ -187,13 +209,29 @@ async function main() {
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:C');
 
+      // Adicionando o newLink nos arrays downloads e tutorials
+    const downloadsWithNewLink = downloads.map(([title, shortPath, fullUrl]) => {
+        const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`;
+        return [title, shortPath, fullUrl, newLink];
+    });
+
+    const tutorialsWithNewLink = tutorials.map(([title, shortPath, fullUrl]) => {
+        const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`;
+        return [title, shortPath, fullUrl, newLink];
+    });
+
+    // Atualizar a coluna "Novo link" (D) nas abas Downloads e Tutoriais
+   await updateSheetLinks(sheets, 'Downloads', downloads);
+   await updateSheetLinks(sheets, 'Tutoriais', tutorials);
+
     // Gerar _redirects
     const redirectsContent = `${generateRedirects(downloads)}\n${generateRedirects(tutorials)}`;
     fs.writeFileSync(redirectsFile, redirectsContent);
     console.log('_redirects gerado com sucesso!');
 
-    // Gerar index.html
-    const htmlContent = generateHtml(downloads, tutorials);
+
+    // Gerar index.html (agora com os links atualizados)
+    const htmlContent = generateHtml(downloadsWithNewLink, tutorialsWithNewLink);
     fs.writeFileSync(outputHtmlFile, htmlContent);
     console.log('index.html gerado com sucesso!');
 }
