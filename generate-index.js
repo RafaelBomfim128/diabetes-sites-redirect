@@ -104,17 +104,21 @@ function generateHtml(downloadLinks, tutorialLinks) {
         }
         li {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            align-items: center; /* Centraliza verticalmente os elementos */
+            justify-content: space-between; /* Distribui os elementos horizontalmente */
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             margin-bottom: 10px;
             transition: background-color 0.3s ease;
+            min-height: 50px; /* Define uma altura mínima uniforme */
         }
         li span {
-            flex-grow: 1;
+            flex-grow: 1; /* Garante que o texto ocupe o espaço restante */
             margin-right: 10px;
+            white-space: nowrap; /* Evita quebra de linha no texto */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Adiciona reticências se o texto for muito longo */
         }
         button {
             padding: 8px 12px;
@@ -125,6 +129,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
             cursor: pointer;
             font-weight: bold;
             margin-left: 10px;
+            flex-shrink: 0; /* Evita que os botões diminuam de tamanho */
         }
         button:hover {
             background-color: #0056b3;
