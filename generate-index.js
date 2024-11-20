@@ -91,8 +91,8 @@ function generateHtml(downloadLinks, tutorialLinks) {
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 95%; /* Deixa o container um pouco mais largo */
-            width: 95%; /* Ajusta a largura total */
+            max-width: 800px;
+            width: 95%;
         }
         h1, h2 {
             color: #0078d7;
@@ -100,14 +100,13 @@ function generateHtml(downloadLinks, tutorialLinks) {
         }
         ul {
             list-style: none;
-            margin: 0 10px; /* Reduz as margens laterais para 10px */
-            padding: 0; /* Remove o espaço interno */
+            padding: 0;
         }
         li {
             display: flex;
             align-items: center; /* Centraliza verticalmente os elementos */
             justify-content: space-between; /* Distribui os elementos horizontalmente */
-            padding: 10px 20px; /* Adiciona mais espaço interno à esquerda e direita */
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             margin-bottom: 10px;
