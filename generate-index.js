@@ -47,23 +47,24 @@ function generateRedirects(links) {
         .join('\n');
 }
 
+
 // Função para gerar HTML
 function generateHtml(downloadLinks, tutorialLinks) {
     const generateSection = (title, links) => `
         <section>
             <h2>${title}</h2>
             <ul>
-                ${links.map(([title, shortPath, fullUrl, newLink]) => `
-                    <li>
-                        <span>${title}</span>
-                        <div class="button-container">  </div>
-                        <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
-                        <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
-                    </li>
-                `).join('')}
+                ${links
+                    .map(([title, shortPath, fullUrl, newLink]) => `
+                            <li>
+                                <span>${title}</span>
+                                <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
+                                <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
+                            </li>`)
+                            .join('')}
+
             </ul>
-        </section>
-    `;
+        </section>`;
 
 
     return `
@@ -103,7 +104,6 @@ function generateHtml(downloadLinks, tutorialLinks) {
         }
         li {
             display: flex;
-            flex-wrap: wrap; /* Permite que os itens quebrem a linha */
             align-items: center;
             justify-content: space-between;
             padding: 10px;
@@ -113,16 +113,8 @@ function generateHtml(downloadLinks, tutorialLinks) {
             transition: background-color 0.3s ease;
         }
         li span {
-            flex-basis: 100%; /* Ocupa toda a largura disponível na tela pequena */
-            margin-right: 0; /* Remove a margem direita */
-            margin-bottom: 10px; /* Adiciona margem inferior para separar do botão */
-         }
-
-        .button-container {
-            display: flex;
-            justify-content: flex-end; /* Alinha os botões à direita */
-            flex-basis: 100%; /* Garante que ocupe 100% da largura em telas pequenas */
-            margin-top: 10px;
+            flex-grow: 1;
+            margin-right: 10px;
         }
         button {
             padding: 8px 12px;
@@ -132,8 +124,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
             color: white;
             cursor: pointer;
             font-weight: bold;
-            margin-left: 10px; /* Adiciona espaço entre os botões */
-            white-space: nowrap; /* Impede que o texto do botão quebre a linha */
+            margin-left: 10px;
         }
         button:hover {
             background-color: #0056b3;
@@ -178,8 +169,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
         }
     </script>
 </body>
-</html>
-    `;
+</html>`;
 }
 
 async function updateSheetLinks(sheets, sheetName, links) {
