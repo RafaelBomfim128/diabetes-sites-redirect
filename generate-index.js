@@ -9,12 +9,14 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 let environment = process.env.NODE_ENV;
 
 // Carregar as credenciais dependendo do ambiente
-let credentials;
+let credentials, spreadsheetId;
 if (environment === 'production') {
     const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
     credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
+    spreadsheetId = process.env.GOOGLE_SHEET_ID;
 } else {
     credentials = require('./env/credentials.json');
+    spreadsheetId = fs.readFileSync('./env/sheet-id.txt', 'utf-8').trim();
 }
 
 // Configure a autenticação
@@ -22,14 +24,6 @@ const auth = new google.auth.GoogleAuth({
     credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
-
-// Obter o ID da planilha
-let spreadsheetId;
-if (environment === 'production') {
-    spreadsheetId = process.env.GOOGLE_SHEET_ID;
-} else {
-    spreadsheetId = fs.readFileSync('./env/sheet-id.txt', 'utf-8').trim();
-}
 
 // Função para formatar o caminho curto
 function formatPath(shortPath) {
@@ -201,6 +195,7 @@ async function updateSheetLinks(sheets, sheetName, links) {
 
 // Função principal
 async function main() {
+    process.exit(1); //Quebrando propositalmente para teste
     const sheets = google.sheets({ version: 'v4', auth });
 
     const readSheetData = async (range) => {
