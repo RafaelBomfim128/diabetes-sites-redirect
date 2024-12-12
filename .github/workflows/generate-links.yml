@@ -28,13 +28,16 @@ jobs:
     - name: Executar o script generate-index.js
       run: node generate-index.js  # Executa o script para gerar os links
       env:
-        GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}  # Definindo a ID da planilha via Secrets
-        GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}  # Definindo as credenciais via Secrets
+        GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}
         NODE_ENV: ${{ env.NODE_ENV }}
 
-    - name: Linkar o diretório com o site Netlify
-      run: |
-        netlify link --id ${{ secrets.NETLIFY_SITE_ID }}  # Linka o diretório ao site Netlify
-        netlify deploy --prod --dir=./  # Faz o deploy
+    - name: Realizar deploy no Netlify
       env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}  # Usando o token de autenticação do Netlify
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
+      run: |
+        # Linka o diretório ao site Netlify usando o ID
+        netlify link --id ${{ secrets.NETLIFY_SITE_ID }}
+        
+        # Realiza o deploy no Netlify
+        netlify deploy --prod --dir=./
