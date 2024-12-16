@@ -53,13 +53,13 @@ function generateHtml(downloadLinks, tutorialLinks) {
             <h2>${title}</h2>
             <ul>
                 ${links
-                    .map(([title, shortPath, fullUrl, newLink]) => `
+            .map(([title, shortPath, fullUrl, newLink]) => `
                             <li>
                                 <span>${title}</span>
                                 <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
                                 <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
                             </li>`)
-                            .join('')}
+            .join('')}
 
             </ul>
         </section>`;
@@ -192,33 +192,27 @@ function generateHtml(downloadLinks, tutorialLinks) {
         }
 
         async function incrementCount() {
-            console.log('Contexto')
-            console.log(process.env.CONTEXT)
             //Se for ambiente de produção
-            if (process.env.CONTEXT !== 'production') {
-                // Evitar múltiplas contagens em curto intervalo
-                const lastView = localStorage.getItem("lastView");
-                const now = Date.now();
+            // Evitar múltiplas contagens em curto intervalo
+            const lastView = localStorage.getItem("lastView");
+            const now = Date.now();
 
-                if (!lastView || now - lastView > 3600000) { // 1 hora
-                    try {
-                        const response = await fetch("https://abacus.jasoncameron.dev/update/${abacusNamespaceKey}?value=1", {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': '${abacusToken}'
-                            }
-                        });
-                        const data = await response.json();
-                        document.getElementById("viewCount").textContent = data.value;
-                        localStorage.setItem("lastView", now);
-                    } catch (error) {
-                        console.error("Erro ao incrementar contagem:", error);
-                    }
-                } else {
-                    console.log("Visualização ignorada para evitar duplicação.");
+            if (!lastView || now - lastView > 3600000) { // 1 hora
+                try {
+                    const response = await fetch("https://abacus.jasoncameron.dev/update/${abacusNamespaceKey}?value=1", {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': '${abacusToken}'
+                        }
+                    });
+                    const data = await response.json();
+                    document.getElementById("viewCount").textContent = data.value;
+                    localStorage.setItem("lastView", now);
+                } catch (error) {
+                    console.error("Erro ao incrementar contagem:", error);
                 }
             } else {
-                console.log("Ambiente de desenvolvimento: contagem não incrementada.");
+                console.log("Visualização ignorada para evitar duplicação.");
             }
         }
 
@@ -278,7 +272,7 @@ async function main() {
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:C');
 
-      // Adicionando o newLink nos arrays downloads e tutorials
+    // Adicionando o newLink nos arrays downloads e tutorials
     const downloadsWithNewLink = downloads.map(([title, shortPath, fullUrl]) => {
         const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`;
         return [title, shortPath, fullUrl, newLink];
@@ -290,8 +284,8 @@ async function main() {
     });
 
     // Atualizar a coluna "Novo link" (D) nas abas Downloads e Tutoriais
-   await updateSheetLinks(sheets, 'Downloads', downloads);
-   await updateSheetLinks(sheets, 'Tutoriais', tutorials);
+    await updateSheetLinks(sheets, 'Downloads', downloads);
+    await updateSheetLinks(sheets, 'Tutoriais', tutorials);
 
     // Gerar _redirects
     const redirectsContent = `${generateRedirects(downloads)}\n${generateRedirects(tutorials)}`;
