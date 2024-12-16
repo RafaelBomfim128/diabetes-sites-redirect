@@ -9,14 +9,18 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 let environment = process.env.NODE_ENV;
 
 // Carregar as credenciais dependendo do ambiente
-let credentials, spreadsheetId;
+let credentials, spreadsheetId, abacusNamespaceKey, abacusToken;
 if (environment === 'production') {
     const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
     credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
     spreadsheetId = process.env.GOOGLE_SHEET_ID;
+    abacusNamespaceKey = process.env.ABACUS_NAMESPACE_KEY
+    abacusToken = process.env.ABACUS_TOKEN
 } else {
     credentials = require('./env/credentials.json');
     spreadsheetId = fs.readFileSync('./env/sheet-id.txt', 'utf-8').trim();
+    abacusNamespaceKey = fs.readFileSync('./env/abacus-namespace-key.txt', 'utf-8').trim();
+    abacusToken = fs.readFileSync('./env/abacus-token.txt', 'utf-8').trim();
 }
 
 // Configure a autenticação
@@ -70,74 +74,94 @@ function generateHtml(downloadLinks, tutorialLinks) {
     <title>Links do Diabetes</title>
     <link rel="icon" href="img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
     <style>
-      body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background-color: #f4f4f4;
-          color: #333;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 20px;
-          margin: 0;
-      }
-      .container {
-          background-color: #fff;
-          padding: 30px;
-          border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          max-width: 800px;
-          width: 100%;
-      }
-      h1, h2 {
-          color: #0078d7;
-          text-align: center;
-      }
-      ul {
-          list-style: none;
-          padding: 0;
-      }
-      li {
-          display: flex;
-          align-items: center; /* Centraliza verticalmente os elementos */
-          justify-content: space-between; /* Distribui os elementos horizontalmente */
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-          margin-bottom: 10px;
-          transition: background-color 0.3s ease;
-          min-height: 45px; /* Define uma altura mínima uniforme */
-      }
-      li span {
-          flex-grow: 1; /* Garante que o texto ocupe o espaço restante */
-          margin-right: 10px;
-          white-space: normal; /* Permite que o texto quebre para a próxima linha */
-          overflow: hidden;
-          text-overflow: ellipsis; /* Adiciona reticências somente se necessário */
-      }
-      button {
-          padding: 8px 8px;
-          border: none;
-          border-radius: 5px;
-          background-color: #0078d7;
-          color: white;
-          cursor: pointer;
-          font-weight: bold;
-          margin-left: 5px;
-          flex-shrink: 0; /* Evita que os botões diminuam de tamanho */
-      }
-      button:hover {
-          background-color: #0056b3;
-      }
-      footer {
-          margin-top: auto;
-          text-align: center;
-          padding: 10px;
-          font-size: smaller;
-          color: #777;
-      }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1, h2 {
+            color: #0078d7;
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center; /* Centraliza verticalmente os elementos */
+            justify-content: space-between; /* Distribui os elementos horizontalmente */
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            min-height: 45px; /* Define uma altura mínima uniforme */
+        }
+        li span {
+            flex-grow: 1; /* Garante que o texto ocupe o espaço restante */
+            margin-right: 10px;
+            white-space: normal; /* Permite que o texto quebre para a próxima linha */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Adiciona reticências somente se necessário */
+        }
+        button {
+            padding: 8px 8px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0078d7;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+            flex-shrink: 0; /* Evita que os botões diminuam de tamanho */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .view-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0078d7;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .view-counter i {
+            font-size: 20px;
+        }
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            font-size: smaller;
+            color: #777;
+        }
     </style>
 </head>
 <body>
+    <div class="view-counter" id="viewCounter">
+        <span>Visualizações totais: <span id="viewCount">...</span></span>
+    </div>
     <div class="container">
         <h1>Links do Diabetes</h1>
         ${generateSection('Downloads', downloadLinks)}
@@ -166,6 +190,52 @@ function generateHtml(downloadLinks, tutorialLinks) {
                     }, 3000);
                 });
         }
+
+        async function incrementCount() {
+            console.log('Contexto')
+            console.log(process.env.CONTEXT)
+            //Se for ambiente de produção
+            if (process.env.CONTEXT !== 'production') {
+                // Evitar múltiplas contagens em curto intervalo
+                const lastView = localStorage.getItem("lastView");
+                const now = Date.now();
+
+                if (!lastView || now - lastView > 3600000) { // 1 hora
+                    try {
+                        const response = await fetch("https://abacus.jasoncameron.dev/update/${abacusNamespaceKey}?value=1", {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': '${abacusToken}'
+                            }
+                        });
+                        const data = await response.json();
+                        document.getElementById("viewCount").textContent = data.value;
+                        localStorage.setItem("lastView", now);
+                    } catch (error) {
+                        console.error("Erro ao incrementar contagem:", error);
+                    }
+                } else {
+                    console.log("Visualização ignorada para evitar duplicação.");
+                }
+            } else {
+                console.log("Ambiente de desenvolvimento: contagem não incrementada.");
+            }
+        }
+
+        async function getCount() {
+            try {
+                const response = await fetch("https://abacus.jasoncameron.dev/get/${abacusNamespaceKey}");
+                const data = await response.json();
+                document.getElementById("viewCount").textContent = data.value;
+            } catch (error) {
+                console.error("Erro ao obter contagem:", error);
+                document.getElementById("viewCount").textContent = "Erro!";
+            }
+        }
+
+        // Inicializa o contador ao carregar a página
+        getCount();
+        incrementCount();
     </script>
 </body>
 </html>`;
