@@ -1,6 +1,3 @@
 [build]
   command = "node generate-index.js && npm run build" # Ou o comando de build do seu projeto
   publish = "public"        # Caminho do diretório de saída do build
-
-[[plugins]]
-  package = "./plugins/netlify-plugin-generate-links"
