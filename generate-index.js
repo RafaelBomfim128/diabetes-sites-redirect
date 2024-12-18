@@ -211,7 +211,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
                 const response = await fetch('${apiBaseUrl}/api/increment', {
                     method: 'POST',
                     headers: {
-                        'x-api-key': ${apiKey},
+                        'x-api-key': '${apiKey}',
                         'Content-Type': 'application/json',
                     },
                 });
@@ -224,8 +224,8 @@ function generateHtml(downloadLinks, tutorialLinks) {
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            incrementCount()
-            getCount();
+            await incrementCount()
+            await getCount();
         });
     </script>
 </body>
