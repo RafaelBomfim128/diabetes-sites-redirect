@@ -197,7 +197,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
                 if (response.ok) {
                     const data = await response.json();
                     const viewCountElement = document.getElementById('viewCount');
-                    viewCountElement.textContent = data.count;
+                    viewCountElement.textContent = data.counter;
                 } else {
                     console.error('Erro ao obter contador:', response.status);
                 }
