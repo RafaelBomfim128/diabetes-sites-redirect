@@ -191,12 +191,9 @@ function generateHtml(downloadLinks, tutorialLinks) {
                 });
         }
 
-        const API_BASE_URL = '{{ABACUS_ENDPOINT}}';
-        const API_KEY = '{{ABACUS_TOKEN}}';
-
         async function getCount() {
             try {
-                const response = await fetch('${API_BASE_URL}/api/count');
+                const response = await fetch('${apiBaseUrl}/api/count');
                 if (response.ok) {
                     const data = await response.json();
                     const viewCountElement = document.getElementById('viewCount');
@@ -211,10 +208,10 @@ function generateHtml(downloadLinks, tutorialLinks) {
 
         async function incrementCount() {
             try {
-                const response = await fetch('${API_BASE_URL}/api/increment', {
+                const response = await fetch('${apiBaseUrl}/api/increment', {
                     method: 'POST',
                     headers: {
-                        'x-api-key': ${API_KEY},
+                        'x-api-key': ${apiKey},
                         'Content-Type': 'application/json',
                     },
                 });
