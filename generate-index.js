@@ -9,13 +9,13 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 let environment = process.env.NODE_ENV;
 
 // Carregar as credenciais dependendo do ambiente
-let credentials, spreadsheetId, abacusNamespaceKey, abacusToken;
+let credentials, spreadsheetId, apiBaseUrl, apiKey;
 if (environment === 'production') {
     const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
     credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
     spreadsheetId = process.env.GOOGLE_SHEET_ID;
-    abacusNamespaceKey = process.env.ABACUS_NAMESPACE_KEY
-    abacusToken = process.env.ABACUS_TOKEN
+    apiBaseUrl = process.env.API_BASE_URL
+    apiKey = process.env.API_KEY
 } else {
     credentials = require('./env/credentials.json');
     spreadsheetId = fs.readFileSync('./env/sheet-id.txt', 'utf-8').trim();
@@ -191,45 +191,45 @@ function generateHtml(downloadLinks, tutorialLinks) {
                 });
         }
 
-        async function incrementCount() {
-            //Se for ambiente de produção
-            // Evitar múltiplas contagens em curto intervalo
-            const lastView = localStorage.getItem("lastView");
-            const now = Date.now();
-
-            if (!lastView || now - lastView > 3600000) { // 1 hora
-                try {
-                    const response = await fetch("https://abacus.jasoncameron.dev/update/${abacusNamespaceKey}?value=1", {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': '${abacusToken}'
-                        }
-                    });
-                    const data = await response.json();
-                    document.getElementById("viewCount").textContent = data.value;
-                    localStorage.setItem("lastView", now);
-                } catch (error) {
-                    console.error("Erro ao incrementar contagem:", error);
-                }
-            } else {
-                console.log("Visualização ignorada para evitar duplicação.");
-            }
-        }
+        const API_BASE_URL = '{{ABACUS_ENDPOINT}}';
+        const API_KEY = '{{ABACUS_TOKEN}}';
 
         async function getCount() {
             try {
-                const response = await fetch("https://abacus.jasoncameron.dev/get/${abacusNamespaceKey}");
-                const data = await response.json();
-                document.getElementById("viewCount").textContent = data.value;
+                const response = await fetch('${API_BASE_URL}/api/count');
+                if (response.ok) {
+                    const data = await response.json();
+                    const viewCountElement = document.getElementById('viewCount');
+                    viewCountElement.textContent = data.count;
+                } else {
+                    console.error('Erro ao obter contador:', response.status);
+                }
             } catch (error) {
-                console.error("Erro ao obter contagem:", error);
-                document.getElementById("viewCount").textContent = "Erro!";
+                console.error('Erro na requisição GET:', error);
             }
         }
 
-        // Inicializa o contador ao carregar a página
-        getCount();
-        incrementCount();
+        async function incrementCount() {
+            try {
+                const response = await fetch('${API_BASE_URL}/api/increment', {
+                    method: 'POST',
+                    headers: {
+                        'x-api-key': ${API_KEY},
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    console.error('Erro ao incrementar contador:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro na requisição POST:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            incrementCount()
+            getCount();
+        });
     </script>
 </body>
 </html>`;
