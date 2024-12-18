@@ -223,7 +223,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             await incrementCount()
             await getCount();
         });
