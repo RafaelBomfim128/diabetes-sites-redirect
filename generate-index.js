@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
+require('dotenv').config();
 
 // Caminhos dos arquivos
 const redirectsFile = path.join(__dirname, '_redirects');
