@@ -8,20 +8,12 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 
 let environment = process.env.NODE_ENV;
 
-// Carregar as credenciais dependendo do ambiente
-let credentials, spreadsheetId, apiBaseUrl, apiKey;
-if (environment === 'production') {
-    const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
-    credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
-    spreadsheetId = process.env.GOOGLE_SHEET_ID;
-    apiBaseUrl = process.env.API_BASE_URL
-    apiKey = process.env.API_KEY
-} else {
-    credentials = require('./env/credentials.json');
-    spreadsheetId = fs.readFileSync('./env/sheet-id.txt', 'utf-8').trim();
-    abacusNamespaceKey = fs.readFileSync('./env/abacus-namespace-key.txt', 'utf-8').trim();
-    abacusToken = fs.readFileSync('./env/abacus-token.txt', 'utf-8').trim();
-}
+// Carregar as credenciais
+const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
+const credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
+const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+const apiBaseUrl = process.env.API_BASE_URL
+const apiKey = process.env.API_KEY
 
 // Configure a autenticação
 const auth = new google.auth.GoogleAuth({
