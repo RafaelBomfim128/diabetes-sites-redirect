@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
+require('dotenv').config();
 
 // Caminhos dos arquivos
 const redirectsFile = path.join(__dirname, '_redirects');
@@ -8,16 +9,12 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 
 let environment = process.env.NODE_ENV;
 
-// Carregar as credenciais dependendo do ambiente
-let credentials, spreadsheetId;
-if (environment === 'production') {
-    const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
-    credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
-    spreadsheetId = process.env.GOOGLE_SHEET_ID;
-} else {
-    credentials = require('./env/credentials.json');
-    spreadsheetId = fs.readFileSync('./env/sheet-id.txt', 'utf-8').trim();
-}
+// Carregar as credenciais
+const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
+const credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
+const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+const apiBaseUrl = process.env.API_BASE_URL
+const apiKey = process.env.API_KEY
 
 // Configure a autenticação
 const auth = new google.auth.GoogleAuth({
@@ -49,13 +46,13 @@ function generateHtml(downloadLinks, tutorialLinks) {
             <h2>${title}</h2>
             <ul>
                 ${links
-                    .map(([title, shortPath, fullUrl, newLink]) => `
+            .map(([title, shortPath, fullUrl, newLink]) => `
                             <li>
                                 <span>${title}</span>
                                 <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
                                 <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
                             </li>`)
-                            .join('')}
+            .join('')}
 
             </ul>
         </section>`;
@@ -70,75 +67,94 @@ function generateHtml(downloadLinks, tutorialLinks) {
     <title>Links do Diabetes</title>
     <link rel="icon" href="img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
     <style>
-      body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background-color: #f4f4f4;
-          color: #333;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 20px;
-          margin: 0;
-      }
-      .container {
-          background-color: #fff;
-          padding: 30px;
-          border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          max-width: 800px;
-          width: 100%;
-      }
-      h1, h2 {
-          color: #0078d7;
-          text-align: center;
-      }
-      ul {
-          list-style: none;
-          padding: 0;
-      }
-      li {
-          display: flex;
-          align-items: center; /* Centraliza verticalmente os elementos */
-          justify-content: space-between; /* Distribui os elementos horizontalmente */
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-          margin-bottom: 10px;
-          transition: background-color 0.3s ease;
-          min-height: 45px; /* Define uma altura mínima uniforme */
-      }
-      li span {
-          flex-grow: 1; /* Garante que o texto ocupe o espaço restante */
-          margin-right: 10px;
-          white-space: normal; /* Permite que o texto quebre para a próxima linha */
-          overflow: hidden;
-          text-overflow: ellipsis; /* Adiciona reticências somente se necessário */
-      }
-      button {
-          padding: 8px 8px;
-          border: none;
-          border-radius: 5px;
-          background-color: #0078d7;
-          color: white;
-          cursor: pointer;
-          font-weight: bold;
-          margin-left: 5px;
-          flex-shrink: 0; /* Evita que os botões diminuam de tamanho */
-      }
-      button:hover {
-          background-color: #0056b3;
-      }
-      footer {
-          margin-top: auto;
-          text-align: center;
-          padding: 10px;
-          font-size: smaller;
-          color: #777;
-      }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1, h2 {
+            color: #0078d7;
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center; /* Centraliza verticalmente os elementos */
+            justify-content: space-between; /* Distribui os elementos horizontalmente */
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            min-height: 45px; /* Define uma altura mínima uniforme */
+        }
+        li span {
+            flex-grow: 1; /* Garante que o texto ocupe o espaço restante */
+            margin-right: 10px;
+            white-space: normal; /* Permite que o texto quebre para a próxima linha */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Adiciona reticências somente se necessário */
+        }
+        button {
+            padding: 8px 8px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0078d7;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+            flex-shrink: 0; /* Evita que os botões diminuam de tamanho */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .view-counter {
+            position: absolute;
+            top: 20px;
+            right: 0px;
+            background-color: #0078d7;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            font-size: smaller;
+            color: #777;
+        }
     </style>
 </head>
 <body>
+    <div class="view-counter">
+        <span>Views totais: <span id="viewCount">...</span></span>
+    </div>
     <div class="container">
+        <br>
         <h1>Links do Diabetes</h1>
         ${generateSection('Downloads', downloadLinks)}
         ${generateSection('Tutoriais', tutorialLinks)}
@@ -166,6 +182,43 @@ function generateHtml(downloadLinks, tutorialLinks) {
                     }, 3000);
                 });
         }
+
+        async function getCount() {
+            try {
+                const response = await fetch('${apiBaseUrl}/api/count');
+                if (response.ok) {
+                    const data = await response.json();
+                    const viewCountElement = document.getElementById('viewCount');
+                    viewCountElement.textContent = data.counter;
+                } else {
+                    console.error('Erro ao obter contador:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro na requisição GET:', error);
+            }
+        }
+
+        async function incrementCount() {
+            try {
+                const response = await fetch('${apiBaseUrl}/api/increment', {
+                    method: 'POST',
+                    headers: {
+                        'x-api-key': '${apiKey}',
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    console.error('Erro ao incrementar contador:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro na requisição POST:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await incrementCount()
+            await getCount();
+        });
     </script>
 </body>
 </html>`;
@@ -208,7 +261,7 @@ async function main() {
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:C');
 
-      // Adicionando o newLink nos arrays downloads e tutorials
+    // Adicionando o newLink nos arrays downloads e tutorials
     const downloadsWithNewLink = downloads.map(([title, shortPath, fullUrl]) => {
         const newLink = `https://diabetesdm1.netlify.app/${formatPath(shortPath)}`;
         return [title, shortPath, fullUrl, newLink];
@@ -220,8 +273,8 @@ async function main() {
     });
 
     // Atualizar a coluna "Novo link" (D) nas abas Downloads e Tutoriais
-   await updateSheetLinks(sheets, 'Downloads', downloads);
-   await updateSheetLinks(sheets, 'Tutoriais', tutorials);
+    await updateSheetLinks(sheets, 'Downloads', downloads);
+    await updateSheetLinks(sheets, 'Tutoriais', tutorials);
 
     // Gerar _redirects
     const redirectsContent = `${generateRedirects(downloads)}\n${generateRedirects(tutorials)}`;

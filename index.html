@@ -64,6 +64,23 @@
         button:hover {
             background-color: #0056b3;
         }
+        .view-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0078d7;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .view-counter i {
+            font-size: 20px;
+        }
         footer {
            margin-top: auto;
            text-align: center;
@@ -74,6 +91,9 @@
     </style>
 </head>
 <body>
+    <div class="view-counter" id="viewCounter">
+        <span>Visualizações totais: <span id="viewCount">...</span></span>
+    </div>
     <div class="container">
         <h1>Links do Diabetes</h1>
         <p>Escolha um dos links abaixo para baixar ou acessar ferramentas úteis:</p>
