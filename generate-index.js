@@ -135,7 +135,6 @@ function generateHtml(downloadLinks, tutorialLinks) {
         .view-counter {
             position: absolute;
             top: 20px;
-            right: 10px;
             background-color: #0078d7;
             color: white;
             padding: 5px 10px;
