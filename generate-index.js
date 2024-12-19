@@ -133,8 +133,8 @@ function generateHtml(downloadLinks, tutorialLinks) {
             background-color: #0056b3;
         }
         .view-counter {
-            position: fixed;
-            top: 10px;
+            position: absolute;
+            top: 20px;
             right: 10px;
             background-color: #0078d7;
             color: white;
@@ -145,9 +145,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-        .view-counter i {
-            font-size: 20px;
+            font-size: 15px;
         }
         footer {
             margin-top: auto;
@@ -159,10 +157,11 @@ function generateHtml(downloadLinks, tutorialLinks) {
     </style>
 </head>
 <body>
-    <div class="view-counter" id="viewCounter">
-        <span>Visualizações totais: <span id="viewCount">...</span></span>
+    <div class="view-counter">
+        <span>Views totais: <span id="viewCount">...</span></span>
     </div>
     <div class="container">
+        <br>
         <h1>Links do Diabetes</h1>
         ${generateSection('Downloads', downloadLinks)}
         ${generateSection('Tutoriais', tutorialLinks)}
