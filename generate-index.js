@@ -147,6 +147,15 @@ function generateHtml(downloadLinks, tutorialLinks) {
             font-size: smaller;
             color: #777;
         }
+
+        #searchBar {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -156,6 +165,9 @@ function generateHtml(downloadLinks, tutorialLinks) {
     <div class="container">
         <br>
         <h1>Links do Diabetes</h1>
+        <form id="searchForm" action="javascript:void(0);" style="width: 100%;" aria-label="Pesquisar links">
+            <input type="text" id="searchBar" placeholder="Pesquise por título..." aria-label="Pesquisar links">
+        </form>
         ${generateSection('Downloads', downloadLinks)}
         ${generateSection('Tutoriais', tutorialLinks)}
     </div>
@@ -163,6 +175,45 @@ function generateHtml(downloadLinks, tutorialLinks) {
         <p>Copyright © 2024 Equipe Milton Leão. Todos os direitos reservados.</p>
     </footer>
     <script>
+        //Se apertar enter, fecha o teclado no mobile
+        document.getElementById('searchForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita o comportamento padrão do Enter, que submete o formulário
+
+            const searchBar = document.getElementById('searchBar');
+            searchBar.blur();
+        });
+
+        //Pesquisa em tempo real (sem precisar apertar enter)
+        document.getElementById('searchBar').addEventListener('input', function () {
+            const query = this.value.trim().toLowerCase();
+            const items = document.querySelectorAll('ul li');
+
+            items.forEach(item => {
+                const title = item.querySelector('span').textContent.trim().toLowerCase();
+                if (title.includes(query)) {
+                    item.style.display = ''; // Exibe o item
+                } else {
+                    item.style.display = 'none'; // Oculta o item
+                }
+            });
+
+            //Se nenhum resultado for encontrado
+            const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
+            if (visibleItems.length === 0) {
+                if (!document.getElementById('noResultsMessage')) {
+                    const message = document.createElement('p');
+                    message.id = 'noResultsMessage';
+                    message.textContent = 'Nenhum resultado encontrado.';
+                    message.style.color = '#999';
+                    message.style.textAlign = 'center';
+                    document.querySelector('.container').appendChild(message);
+                }
+            } else {
+                const noResultsMessage = document.getElementById('noResultsMessage');
+                if (noResultsMessage) noResultsMessage.remove();
+            }
+        });
+
         function copyLink(link, button) {
             navigator.clipboard.writeText(link)
                 .then(() => {
