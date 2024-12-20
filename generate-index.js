@@ -147,6 +147,15 @@ function generateHtml(downloadLinks, tutorialLinks) {
             font-size: smaller;
             color: #777;
         }
+
+        #searchBar {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -156,6 +165,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
     <div class="container">
         <br>
         <h1>Links do Diabetes</h1>
+        <input type="text" id="searchBar" placeholder="Pesquise por título...">
         ${generateSection('Downloads', downloadLinks)}
         ${generateSection('Tutoriais', tutorialLinks)}
     </div>
