@@ -173,6 +173,38 @@ function generateHtml(downloadLinks, tutorialLinks) {
         <p>Copyright © 2024 Equipe Milton Leão. Todos os direitos reservados.</p>
     </footer>
     <script>
+        document.getElementById('searchBar').addEventListener('input', function () {
+            const query = this.value.trim().toLowerCase();
+            const items = document.querySelectorAll('ul li');
+
+            items.forEach(item => {
+                // Extrai o texto do span correspondente e limpa espaços
+                const title = item.querySelector('span').textContent.trim().toLowerCase();
+
+                // Verifica se o texto do span inclui a consulta (case insensitive)
+                if (title.includes(query)) {
+                    item.style.display = ''; // Exibe o item
+                } else {
+                    item.style.display = 'none'; // Oculta o item
+                }
+            });
+
+            // Exibe uma mensagem se nenhum item for encontrado
+            const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
+            if (visibleItems.length === 0) {
+                if (!document.getElementById('noResultsMessage')) {
+                    const message = document.createElement('p');
+                    message.id = 'noResultsMessage';
+                    message.textContent = 'Nenhum resultado encontrado.';
+                    message.style.color = '#999';
+                    message.style.textAlign = 'center';
+                    document.querySelector('.container').appendChild(message);
+                }
+            } else {
+                const noResultsMessage = document.getElementById('noResultsMessage');
+                if (noResultsMessage) noResultsMessage.remove();
+            }
+        });
         function copyLink(link, button) {
             navigator.clipboard.writeText(link)
                 .then(() => {
