@@ -1,2 +1,2 @@
 [build]
-  command = "node generate-index.js" # Ou o comando de build do seu projeto
+  command = "node generate-index.js"
