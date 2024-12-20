@@ -165,7 +165,9 @@ function generateHtml(downloadLinks, tutorialLinks) {
     <div class="container">
         <br>
         <h1>Links do Diabetes</h1>
-        <input type="text" id="searchBar" placeholder="Pesquise por título...">
+        <form id="searchForm" action="javascript:void(0);" style="width: 100%;" aria-label="Pesquisar links">
+            <input type="text" id="searchBar" placeholder="Pesquise por título..." aria-label="Pesquisar links">
+        </form>
         ${generateSection('Downloads', downloadLinks)}
         ${generateSection('Tutoriais', tutorialLinks)}
     </div>
@@ -173,15 +175,21 @@ function generateHtml(downloadLinks, tutorialLinks) {
         <p>Copyright © 2024 Equipe Milton Leão. Todos os direitos reservados.</p>
     </footer>
     <script>
+        //Se apertar enter, fecha o teclado no mobile
+        document.getElementById('searchForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita o comportamento padrão do Enter, que submete o formulário
+
+            const searchBar = document.getElementById('searchBar');
+            searchBar.blur();
+        });
+
+        //Pesquisa em tempo real (sem precisar apertar enter)
         document.getElementById('searchBar').addEventListener('input', function () {
             const query = this.value.trim().toLowerCase();
             const items = document.querySelectorAll('ul li');
 
             items.forEach(item => {
-                // Extrai o texto do span correspondente e limpa espaços
                 const title = item.querySelector('span').textContent.trim().toLowerCase();
-
-                // Verifica se o texto do span inclui a consulta (case insensitive)
                 if (title.includes(query)) {
                     item.style.display = ''; // Exibe o item
                 } else {
@@ -189,7 +197,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
                 }
             });
 
-            // Exibe uma mensagem se nenhum item for encontrado
+            //Se nenhum resultado for encontrado
             const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
             if (visibleItems.length === 0) {
                 if (!document.getElementById('noResultsMessage')) {
@@ -205,6 +213,7 @@ function generateHtml(downloadLinks, tutorialLinks) {
                 if (noResultsMessage) noResultsMessage.remove();
             }
         });
+
         function copyLink(link, button) {
             navigator.clipboard.writeText(link)
                 .then(() => {
