@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Links do Diabetes</title>
+    <link rel="icon" href="img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1,
+        h2 {
+            color: #0078d7;
+            text-align: center;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            /* Centraliza verticalmente os elementos */
+            justify-content: space-between;
+            /* Distribui os elementos horizontalmente */
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            min-height: 45px;
+            /* Define uma altura mínima uniforme */
+        }
+
+        li span {
+            flex-grow: 1;
+            /* Garante que o texto ocupe o espaço restante */
+            margin-right: 10px;
+            white-space: normal;
+            /* Permite que o texto quebre para a próxima linha */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* Adiciona reticências somente se necessário */
+        }
+
+        button {
+            padding: 8px 8px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0078d7;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+            flex-shrink: 0;
+            /* Evita que os botões diminuam de tamanho */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .view-counter {
+            position: absolute;
+            top: 20px;
+            right: 0px;
+            background-color: #0078d7;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            font-size: smaller;
+            color: #777;
+        }
+
+        #searchBar {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="view-counter">
+        <span>Views totais: <span id="viewCount">...</span></span>
+    </div>
+    <div class="container">
+        <br>
+        <h1>Links do Diabetes</h1>
+        <form id="searchForm" action="javascript:void(0);" style="width: 100%;" aria-label="Pesquisar links">
+            <input type="text" id="searchBar" placeholder="Pesquise por título..." aria-label="Pesquisar links">
+        </form>
+        {{{downloads}}}
+        {{{tutoriais}}}
+    </div>
+    <footer>
+        <p>Copyright © 2024 Equipe Milton Leão. Todos os direitos reservados.</p>
+    </footer>
+    <script>
+        const apiBaseUrl = "{{apiBaseUrl}}";
+        const apiKey = "{{apiKey}}";
+        //Se apertar enter, fecha o teclado no mobile
+        document.getElementById('searchForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evita o comportamento padrão do Enter, que submete o formulário
+
+            const searchBar = document.getElementById('searchBar');
+            searchBar.blur();
+        });
+
+        //Pesquisa em tempo real (sem precisar apertar enter)
+        document.getElementById('searchBar').addEventListener('input', function () {
+            const query = this.value.trim().toLowerCase();
+            const items = document.querySelectorAll('ul li');
+
+            items.forEach(item => {
+                const title = item.querySelector('span').textContent.trim().toLowerCase();
+                if (title.includes(query)) {
+                    item.style.display = ''; // Exibe o item
+                } else {
+                    item.style.display = 'none'; // Oculta o item
+                }
+            });
+
+            //Se nenhum resultado for encontrado
+            const visibleItems = Array.from(items).filter(item => item.style.display !== 'none');
+            if (visibleItems.length === 0) {
+                if (!document.getElementById('noResultsMessage')) {
+                    const message = document.createElement('p');
+                    message.id = 'noResultsMessage';
+                    message.textContent = 'Nenhum resultado encontrado.';
+                    message.style.color = '#999';
+                    message.style.textAlign = 'center';
+                    document.querySelector('.container').appendChild(message);
+                }
+            } else {
+                const noResultsMessage = document.getElementById('noResultsMessage');
+                if (noResultsMessage) noResultsMessage.remove();
+            }
+        });
+
+        function copyLink(link, button) {
+            navigator.clipboard.writeText(link)
+                .then(() => {
+                    button.style.backgroundColor = 'green';
+                    button.textContent = 'Link copiado!';
+                    setTimeout(() => {
+                        button.style.backgroundColor = '';
+                        button.textContent = 'Copiar Link';
+                    }, 3000);
+                })
+                .catch(() => {
+                    button.style.backgroundColor = 'red';
+                    button.textContent = 'Erro!';
+                    setTimeout(() => {
+                        button.style.backgroundColor = '';
+                        button.textContent = 'Copiar Link';
+                    }, 3000);
+                });
+        }
+
+        async function getCount() {
+            try {
+                const response = await fetch(`${apiBaseUrl}/api/count`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const viewCountElement = document.getElementById('viewCount');
+                    viewCountElement.textContent = data.counter;
+                } else {
+                    console.error('Erro ao obter contador:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro na requisição GET:', error);
+            }
+        }
+
+        async function incrementCount() {
+            try {
+                const response = await fetch(`${apiBaseUrl}/api/increment`, {
+                    method: 'POST',
+                    headers: {
+                        'x-api-key': apiKey,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    console.error('Erro ao incrementar contador:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro na requisição POST:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await incrementCount()
+            await getCount();
+        });
+    </script>
+</body>
+
+</html>

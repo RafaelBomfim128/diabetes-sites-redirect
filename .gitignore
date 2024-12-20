@@ -93,3 +93,7 @@ lerna-debug.log
 Thumbs.db
 # Local Netlify folder
 .netlify
+
+#Demais arquivos do projeto que não devem ser versionados
+_redirects #gerado em tempo de execução
+index.js #gerado em tempo de execução
