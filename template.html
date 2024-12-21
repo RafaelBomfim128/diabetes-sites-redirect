@@ -241,13 +241,13 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await incrementCount()
             await getCount();
-            startAutoUpdate();
+            startAutoUpdateCount();
 
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible') {
-                    startAutoUpdate();
+                    startAutoUpdateCount();
                 } else {
-                    stopAutoUpdate();
+                    stopAutoUpdateCount();
                 }
             });
         });
