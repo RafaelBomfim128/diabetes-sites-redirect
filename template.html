@@ -133,6 +133,7 @@
         <p>Copyright © 2024 Equipe Milton Leão. Todos os direitos reservados.</p>
     </footer>
     <script>
+        let intervalId;
         const apiBaseUrl = "{{apiBaseUrl}}";
         const apiKey = "{{apiKey}}";
         //Se apertar enter, fecha o teclado no mobile
@@ -201,6 +202,7 @@
                     const data = await response.json();
                     const viewCountElement = document.getElementById('viewCount');
                     viewCountElement.textContent = data.counter;
+                    console.log('Busquei o contador:', data.counter);
                 } else {
                     console.error('Erro ao obter contador:', response.status);
                 }
@@ -226,9 +228,28 @@
             }
         }
 
+        function startAutoUpdateCount() {
+            intervalId = setInterval(getCount, 10000);
+        }
+
+        function stopAutoUpdateCount() {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        }   
+
         document.addEventListener('DOMContentLoaded', async () => {
             await incrementCount()
             await getCount();
+            startAutoUpdate();
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    startAutoUpdate();
+                } else {
+                    stopAutoUpdate();
+                }
+            });
         });
     </script>
 </body>
