@@ -215,7 +215,7 @@
                 const response = await fetch(`${apiBaseUrl}/api/increment`, {
                     method: 'POST',
                     headers: {
-                        'x-api-key': apiKey,
+                        'x-api-key': `${apiKey}`,
                         'Content-Type': 'application/json',
                     },
                 });
