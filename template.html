@@ -134,8 +134,8 @@
     </footer>
     <script>
         let intervalId;
-        const apiBaseUrl = "{{{apiBaseUrl}}}";
-        const apiKey = "{{{apiKey}}}";
+        const apiBaseUrl = "{{{apiBaseUrl}}}".replace(/&quot;/g, '');
+        const apiKey = "{{apiKey}}".replace(/&quot;/g, '');
         //Se apertar enter, fecha o teclado no mobile
         document.getElementById('searchForm').addEventListener('submit', function (event) {
             event.preventDefault(); // Evita o comportamento padrão do Enter, que submete o formulário
