@@ -202,7 +202,6 @@
                     const data = await response.json();
                     const viewCountElement = document.getElementById('viewCount');
                     viewCountElement.textContent = data.counter;
-                    console.log('Busquei o contador:', data.counter);
                 } else {
                     console.error('Erro ao obter contador:', response.status);
                 }
