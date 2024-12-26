@@ -4,8 +4,9 @@
   "description": "",
   "main": "generate-index.js",
   "scripts": {
-    "dev": "NODE_ENV=development node generate-index.js",
-    "prod": "NODE_ENV=production node generate-index.js"
+    "dev": "env NODE_ENV=development node generate-index.js",
+    "prod": "env NODE_ENV=production node generate-index.js",
+    "read_only": "env NODE_ENV=read_only node generate-index.js"
   },
   "keywords": [],
   "author": "",

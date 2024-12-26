@@ -140,8 +140,8 @@
 <body>
     <div class="view-counter">
         <span class="title">Views</span>
-        <span>Dia: <span id="dailyViews" class="values">...</span></span>
-        <span>Mês: <span id="monthlyViews" class="values">...</span></span>
+        <span>Hoje: <span id="dailyViews" class="values">...</span></span>
+        <span>Este mês: <span id="monthlyViews" class="values">...</span></span>
         <span>Totais: <span id="totalViews" class="values last-value">...</span></span>
     </div>
     <div class="container">
@@ -276,8 +276,8 @@
                     },
                 });
                 if (response.ok) {
-                    await getDailyViews();
-                    await getMonthlyViews();
+                    getDailyViews();
+                    getMonthlyViews();
                 } else {
                     console.error('Erro ao incrementar contador:', response.status);
                 }
@@ -305,11 +305,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            await getDailyViews();
-            await getMonthlyViews();
-            await getTotalViews();
-            await incrementViews();
-            startAutoUpdateViews();
+            Promise.all([
+                getDailyViews(),
+                getMonthlyViews(),
+                getTotalViews(),
+            ]).then(() => {
+                incrementViews();
+                startAutoUpdateViews();
+            });
 
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible') {

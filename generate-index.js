@@ -13,6 +13,7 @@ const credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString
 const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 const apiBaseUrl = process.env.API_BASE_URL
 const apiKey = process.env.API_KEY
+const NODE_ENV = process.env.NODE_ENV
 
 const auth = new google.auth.GoogleAuth({
     credentials,
@@ -35,7 +36,7 @@ function generateRedirects(links) {
 }
 
 function generateSection(title, links) {
-    return`
+    return `
         <section>
             <h2>${title}</h2>
             <ul>
@@ -45,7 +46,7 @@ function generateSection(title, links) {
                         <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
                         <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
                     </li>`)
-                .join('')}
+            .join('')}
             </ul>
         </section>`;
 }
@@ -96,9 +97,11 @@ async function main() {
         return [title, shortPath, fullUrl, newLink];
     });
 
-    //Atualização da coluna "Novo link" (D) nas abas Downloads e Tutoriais
-    await updateSheetLinks(sheets, 'Downloads', downloads);
-    await updateSheetLinks(sheets, 'Tutoriais', tutorials);
+    if (NODE_ENV !== 'read_only') {
+        //Atualização da coluna "Novo link" (D) nas abas Downloads e Tutoriais
+        await updateSheetLinks(sheets, 'Downloads', downloads);
+        await updateSheetLinks(sheets, 'Tutoriais', tutorials);
+    }
 
     //_redirects
     const redirectsContent = `${generateRedirects(downloads)}\n${generateRedirects(tutorials)}`;
