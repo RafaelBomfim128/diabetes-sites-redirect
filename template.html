@@ -85,16 +85,25 @@
             position: absolute;
             top: 20px;
             right: 0px;
-            background-color: #0078d7;
-            color: white;
+            background-color: rgba(0, 120, 215, 0.1);
+            color: #333;
             padding: 5px 10px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 15px;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .view-counter .title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding-right: 10px;
+            border-right: 1px solid rgba(0, 120, 215, 0.3);
+            color: #0056a3;
         }
 
         footer {
@@ -118,7 +127,10 @@
 
 <body>
     <div class="view-counter">
-        <span>Views totais: <span id="viewCount">...</span></span>
+        <span class="title">Views</span>
+        <span>Dia: <span id="dailyViews">...</span></span>
+        <span>Mês: <span id="monthlyViews">...</span></span>
+        <span>Totais: <span id="totalViews">...</span></span>
     </div>
     <div class="container">
         <br>
@@ -133,7 +145,9 @@
         <p>Copyright © 2024 Equipe Milton Leão. Todos os direitos reservados.</p>
     </footer>
     <script>
-        let intervalId;
+        let getDailyViewsInterval;
+        let getMonthlyViewsInterval;
+        let getTotalViewsInterval;
         const apiBaseUrl = "{{{apiBaseUrl}}}".replace(/&quot;/g, '');
         const apiKey = "{{apiKey}}".replace(/&quot;/g, '');
         //Se apertar enter, fecha o teclado no mobile
@@ -195,12 +209,12 @@
                 });
         }
 
-        async function getCount() {
+        async function getDailyViews() {
             try {
-                const response = await fetch(`${apiBaseUrl}/api/count`);
+                const response = await fetch(`${apiBaseUrl}/api/dailyviews`);
                 if (response.ok) {
                     const data = await response.json();
-                    const viewCountElement = document.getElementById('viewCount');
+                    const viewCountElement = document.getElementById('dailyViews');
                     viewCountElement.textContent = data.counter;
                 } else {
                     console.error('Erro ao obter contador:', response.status);
@@ -210,15 +224,47 @@
             }
         }
 
-        async function incrementCount() {
+        async function getMonthlyViews() {
             try {
-                const response = await fetch(`${apiBaseUrl}/api/increment`, {
+                const response = await fetch(`${apiBaseUrl}/api/monthlyviews`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const viewCountElement = document.getElementById('monthlyViews');
+                    viewCountElement.textContent = data.counter;
+                } else {
+                    console.error('Erro ao obter contador:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro na requisição GET:', error);
+            }
+        }
+
+        async function getTotalViews() {
+            try {
+                const response = await fetch(`${apiBaseUrl}/api/totalviews`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const viewCountElement = document.getElementById('totalViews');
+                    viewCountElement.textContent = data.counter;
+                } else {
+                    console.error('Erro ao obter contador:', response.status);
+                }
+            } catch (error) {
+                console.error('Erro na requisição GET:', error);
+            }
+        }
+
+        async function incrementViews() {
+            try {
+                const response = await fetch(`${apiBaseUrl}/api/incrementViews`, {
                     method: 'POST',
                     headers: {
                         'x-api-key': apiKey,
                         'Content-Type': 'application/json',
                     },
                 });
+                await getDailyViews();
+                await getMonthlyViews();
                 if (!response.ok) {
                     console.error('Erro ao incrementar contador:', response.status);
                 }
@@ -227,26 +273,36 @@
             }
         }
 
-        function startAutoUpdateCount() {
-            intervalId = setInterval(getCount, 10000);
+        function startAutoUpdateViews() {
+            getDailyViewsInterval = setInterval(getDailyViews, 10000);
+            getMonthlyViewsInterval = setInterval(getMonthlyViews, 10000);
+            getTotalViewsInterval = setInterval(getTotalViews, 10000);
         }
 
-        function stopAutoUpdateCount() {
-            if (intervalId) {
-                clearInterval(intervalId);
+        function stopAutoUpdateViews() {
+            if (getDailyViewsInterval) {
+                clearInterval(getDailyViewsInterval);
             }
-        }   
+            if (getMonthlyViewsInterval) {
+                clearInterval(getMonthlyViewsInterval);
+            }
+            if (getTotalViewsInterval) {
+                clearInterval(getTotalViewsInterval);
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            await incrementCount()
-            await getCount();
-            startAutoUpdateCount();
+            await getDailyViews();
+            await getMonthlyViews();
+            await getTotalViews();
+            await incrementViews();
+            startAutoUpdateViews();
 
             document.addEventListener('visibilitychange', () => {
                 if (document.visibilityState === 'visible') {
-                    startAutoUpdateCount();
+                    startAutoUpdateViews();
                 } else {
-                    stopAutoUpdateCount();
+                    stopAutoUpdateViews();
                 }
             });
         });
