@@ -106,6 +106,18 @@
             color: #0056a3;
         }
 
+		.view-counter .values {
+            font-weight: 700;
+            text-transform: uppercase;
+            padding-right: 10px;
+            border-right: 1px solid rgba(0, 120, 215, 0.3);
+            color: #0056a3;
+        }
+
+        .view-counter .values.last-value {
+            border-right: none;
+        }
+
         footer {
             margin-top: auto;
             text-align: center;
@@ -128,9 +140,9 @@
 <body>
     <div class="view-counter">
         <span class="title">Views</span>
-        <span>Dia: <span id="dailyViews">...</span></span>
-        <span>Mês: <span id="monthlyViews">...</span></span>
-        <span>Totais: <span id="totalViews">...</span></span>
+        <span>Dia: <span id="dailyViews" class="values">...</span></span>
+        <span>Mês: <span id="monthlyViews" class="values">...</span></span>
+        <span>Totais: <span id="totalViews" class="values last-value">...</span></span>
     </div>
     <div class="container">
         <br>
