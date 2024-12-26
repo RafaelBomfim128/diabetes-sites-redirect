@@ -275,9 +275,10 @@
                         'Content-Type': 'application/json',
                     },
                 });
-                await getDailyViews();
-                await getMonthlyViews();
-                if (!response.ok) {
+                if (response.ok) {
+                    await getDailyViews();
+                    await getMonthlyViews();
+                } else {
                     console.error('Erro ao incrementar contador:', response.status);
                 }
             } catch (error) {
