@@ -278,6 +278,7 @@
                 if (response.ok) {
                     getDailyViews();
                     getMonthlyViews();
+                    getTotalViews();
                 } else {
                     console.error('Erro ao incrementar contador:', response.status);
                 }
