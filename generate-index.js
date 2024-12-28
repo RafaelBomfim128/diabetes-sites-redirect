@@ -35,7 +35,7 @@ function generateRedirects(links) {
         .join('\n');
 }
 
-function generateSection(title, links) {
+function generateSectionLinks(title, links) {
     return `
         <section>
             <h2>${title}</h2>
@@ -48,6 +48,26 @@ function generateSection(title, links) {
                     </li>`)
             .join('')}
             </ul>
+        </section>`;
+}
+
+function generateSectionFaq(title, questionAnswer) {
+    return `
+        <section>
+            <h2>${title}</h2>
+            <div class="faq">
+                ${questionAnswer.map(([question, answer]) => `
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ${question}
+                            <span class="arrow"></span>
+                        </button>
+                        <div class="faq-answer">
+                            ${answer}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
         </section>`;
 }
 
@@ -85,6 +105,7 @@ async function main() {
 
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:C');
+    const faq = await readSheetData('FAQ!A:B');
 
     // Adicionando o newLink nos arrays downloads e tutorials
     const downloadsWithNewLink = downloads.map(([title, shortPath, fullUrl]) => {
@@ -112,8 +133,9 @@ async function main() {
     const template = handlebars.compile(templateContent);
 
     const htmlContent = template({
-        downloads: generateSection('Downloads', downloadsWithNewLink),
-        tutoriais: generateSection('Tutoriais', tutorialsWithNewLink),
+        downloads: generateSectionLinks('Downloads', downloadsWithNewLink),
+        tutoriais: generateSectionLinks('Tutoriais', tutorialsWithNewLink),
+        faq: generateSectionFaq('FAQ - Perguntas Frequentes', faq),
         apiBaseUrl,
         apiKey,
     });
