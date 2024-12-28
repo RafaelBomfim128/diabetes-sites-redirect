@@ -169,6 +169,12 @@
             }
         }
 
+        @media (hover: none) {
+            .faq-question:hover {
+                background-color: rgba(0, 120, 215, 0.1);
+            }
+        }
+
         .faq-question:active {
             background-color: rgba(0, 120, 215, 0.1);
         }
@@ -420,6 +426,10 @@
                     answer.style.paddingTop = "0";
                     answer.style.paddingBottom = "0";
                 }
+            });
+
+            button.addEventListener('touchend', () => {
+                button.classList.remove('hover');
             });
         });
     </script>
