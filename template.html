@@ -163,8 +163,14 @@
             position: relative;
         }
 
-        .faq-question:hover {
-            background-color: rgba(0, 120, 215, 0.4);
+        @media (hover: hover) {
+            .faq-question:hover {
+                background-color: rgba(0, 120, 215, 0.4);
+            }
+        }
+
+        .faq-question:active {
+            background-color: rgba(0, 120, 215, 0.1);
         }
 
         .faq-question .arrow {
