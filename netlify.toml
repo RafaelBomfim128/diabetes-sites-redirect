@@ -1,2 +1,6 @@
 [build]
   command = "node generate-index.js"
+  publish = "."
+
+[environment]
+  NODE_ENV = "production"
