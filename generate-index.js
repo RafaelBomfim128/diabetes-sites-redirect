@@ -9,6 +9,7 @@ const outputHtmlFile = path.join(__dirname, 'index.html');
 const templateFile = path.join(__dirname, 'template.html');
 
 const credentialsBase64 = process.env.GOOGLE_CREDENTIALS_BASE64;
+console.log('credentialsBase64:', credentialsBase64);
 const credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString('utf-8'));
 const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 const apiBaseUrl = process.env.API_BASE_URL
