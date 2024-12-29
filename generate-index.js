@@ -14,6 +14,8 @@ const credentials = JSON.parse(Buffer.from(credentialsBase64, 'base64').toString
 const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 const apiBaseUrl = process.env.API_BASE_URL
 const apiKey = process.env.API_KEY
+console.log('apiBaseUrl:', apiBaseUrl);
+console.log('apiKey:', apiKey);
 const NODE_ENV = process.env.NODE_ENV
 
 const auth = new google.auth.GoogleAuth({
