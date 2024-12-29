@@ -35,7 +35,7 @@ function generateRedirects(links) {
         .join('\n');
 }
 
-function generateSectionLinks(title, links) {
+function generateSectionLinks(title, links, buttonName) {
     return `
         <section>
             <h2>${title}</h2>
@@ -43,7 +43,7 @@ function generateSectionLinks(title, links) {
                 ${links.map(([title, shortPath, fullUrl, newLink]) => `
                     <li>
                         <span>${title}</span>
-                        <button onclick="window.open('${fullUrl}', '_blank')">Acessar</button>
+                        <button onclick="window.open('${fullUrl}', '_blank')">${buttonName}</button>
                         <button onclick="copyLink('${newLink}', this)">Copiar Link</button>
                     </li>`)
             .join('')}
@@ -133,8 +133,8 @@ async function main() {
     const template = handlebars.compile(templateContent);
 
     const htmlContent = template({
-        downloads: generateSectionLinks('Downloads', downloadsWithNewLink),
-        tutoriais: generateSectionLinks('Tutoriais', tutorialsWithNewLink),
+        downloads: generateSectionLinks('Downloads', downloadsWithNewLink, 'Baixar'),
+        tutoriais: generateSectionLinks('Tutoriais', tutorialsWithNewLink, 'Acessar'),
         faq: generateSectionFaq('FAQ - Perguntas Frequentes', faq),
         apiBaseUrl,
         apiKey,
