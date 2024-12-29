@@ -27,6 +27,10 @@ jobs:
 
     - name: Executar o script generate-index.js
       run: node generate-index.js  # Executa o script para gerar os links
+      env:
+        GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}
+        NODE_ENV: ${{ env.NODE_ENV }}
 
     - name: Realizar deploy no Netlify
       env:
