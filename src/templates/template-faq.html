@@ -1,0 +1,45 @@
+{{#if isFullPage}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Perguntas Frequentes</title>
+    <link rel="icon" href="img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="../public/css/geral.css">
+    <link rel="stylesheet" href="../public/css/faq.css">
+</head>
+
+<body>
+    {{> view-counter }}
+    <div class="container"><br>
+        {{/if}}
+
+        <section>
+            <h2>FAQ - Perguntas Frequentes ❓💡</h2>
+            <div class="faq">
+                {{#each questionAnswer}}
+                <div class="faq-item">
+                    <button class="faq-question">
+                        {{this.question}}
+                        <span class="arrow"></span>
+                    </button>
+                    <div class="faq-answer">
+                        {{this.answer}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+
+        {{#if isFullPage}}
+    </div>
+    {{> footer }}
+    <script src="../public/js/geral.js"></script>
+    <script src="../public/js/barra-pesquisa.js"></script>
+    <script src="../public/js/faq.js"></script>
+</body>
+
+</html>
+{{/if}}

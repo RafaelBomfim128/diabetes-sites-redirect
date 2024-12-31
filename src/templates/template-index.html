@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnologias no Diabetes</title>
+    <link rel="icon" href="img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="../public/css/geral.css">
+    <link rel="stylesheet" href="../public/css/faq.css">
+</head>
+
+<body>
+    {{> view-counter }}
+    <div class="container"><br>
+        <header>
+            <h1>Tecnologias no Diabetes 💉🩸💻📱</h1>
+            {{> search-bar }}
+        </header>
+        {{{ downloads }}}
+        {{{ tutoriais }}}
+        {{{ faq }}}
+    </div>
+    {{> footer }}
+    <script src="../public/js/geral.js"></script>
+    <script src="../public/js/barra-pesquisa.js"></script>
+    <script src="../public/js/faq.js"></script>
+</body>
+
+</html>

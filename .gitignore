@@ -97,3 +97,9 @@ Thumbs.db
 #Demais arquivos do projeto que não devem ser versionados
 _redirects
 index.js
+
+# Ignorar todos os arquivos dentro da pasta public
+/public/*
+# Exceto as pastas css e js
+!/public/css
+!/public/js
