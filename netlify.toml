@@ -1,6 +1,6 @@
 [build]
   command = "node src/generate-html.js"
-  publish = "."
+  publish = "public"
 
 [environment]
   NODE_ENV = "production"
