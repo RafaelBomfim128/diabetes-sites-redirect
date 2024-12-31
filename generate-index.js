@@ -136,9 +136,9 @@ async function main() {
     const template = handlebars.compile(templateContent);
 
     const htmlContent = template({
-        downloads: generateSectionLinks('Downloads', downloadsWithNewLink, 'Baixar'),
-        tutoriais: generateSectionLinks('Tutoriais', tutorialsWithNewLink, 'Acessar'),
-        faq: generateSectionFaq('FAQ - Perguntas Frequentes', faq),
+        downloads: generateSectionLinks('Downloads 💾📂', downloadsWithNewLink, 'Baixar'),
+        tutoriais: generateSectionLinks('Tutoriais 📚🎥🛠️', tutorialsWithNewLink, 'Acessar'),
+        faq: generateSectionFaq('FAQ - Perguntas Frequentes ❓💡📜', faq),
         apiBaseUrl,
         apiKey,
     });
