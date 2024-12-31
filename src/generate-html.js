@@ -111,8 +111,8 @@ async function main() {
         };
 
         //Atualização da coluna "Novo link" (D) nas abas Downloads e Tutoriais
-        await updateSheetLinks(sheets, 'Downloads', downloads);
-        await updateSheetLinks(sheets, 'Tutoriais', tutorials);
+        await updateSheetLinks('Downloads', downloads);
+        await updateSheetLinks('Tutoriais', tutorials);
     }
 
     //_redirects

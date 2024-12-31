@@ -1,5 +1,5 @@
 [build]
-  command = "node generate-html.js"
+  command = "node src/generate-html.js"
   publish = "."
 
 [environment]
