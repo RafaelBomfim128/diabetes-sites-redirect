@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tecnologias no Diabetes</title>
-    <link rel="icon" href="img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
+    <link rel="icon" href="../img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="./css/geral.css">
     <link rel="stylesheet" href="./css/faq.css">
 </head>
@@ -23,6 +23,12 @@
         {{{ faq }}}
     </div>
     {{> footer }}
+    <script>
+        window.env = {
+            API_BASE_URL: "{{apiBaseUrl}}",
+            API_KEY: "{{apiKey}}"
+        };
+    </script>
     <script src="./js/geral.js"></script>
     <script src="./js/barra-pesquisa.js"></script>
     <script src="./js/faq.js"></script>
