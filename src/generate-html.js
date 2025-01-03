@@ -157,16 +157,22 @@ async function main() {
     //Geração de páginas individuais
     generateHtml('template-downloads.html', 'downloads.html', {
         links: downloadsFormatted,
+        apiBaseUrl,
+        apiKey,
         isFullPage: true
     });
 
     generateHtml('template-tutoriais.html', 'tutoriais.html', {
         links: tutorialsFormatted,
+        apiBaseUrl,
+        apiKey,
         isFullPage: true
     });
 
     generateHtml('template-faq.html', 'faq.html', {
         questionAnswer: faqFormatted,
+        apiBaseUrl,
+        apiKey,
         isFullPage: true
     });
 }
