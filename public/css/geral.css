@@ -18,7 +18,6 @@ body {
     width: 100%;
     padding-left: 30px;
     position: relative;
-    z-index: 0;
 }
 
 h1,
@@ -69,7 +68,7 @@ button:hover {
 }
 
 .view-counter {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 0px;
     background-color: rgba(0, 120, 215, 0.1);
@@ -159,7 +158,7 @@ footer {
 
 .sidenav .closebtn {
     position: absolute;
-    top: 0;
+    top: 0px;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
