@@ -42,4 +42,4 @@ jobs:
         netlify link --id ${{ secrets.NETLIFY_SITE_ID }}
         
         # Realiza o deploy no Netlify
-        netlify deploy --prod --dir=./
+        netlify deploy --prod --dir=public
