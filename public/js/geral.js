@@ -90,10 +90,8 @@ async function getTotalViews() {
 }
 
 async function incrementViews() {
-    console.log('Referer:', document.referrer);
-    console.log('Origin:', window.location.origin);
-    console.log(document.referrer === "" || document.referrer.indexOf(window.location.origin) !== 0);
-    if (document.referrer === "" || document.referrer.indexOf(window.location.origin) !== 0) {
+    console.log(performance.getEntriesByType("navigation")[0].type);
+    if (performance.getEntriesByType("navigation")[0].type === "navigate") {
         try {
             const response = await fetch(`${apiBaseUrl}/api/incrementViews`, {
                 method: 'POST',
