@@ -1,8 +1,15 @@
 let getDailyViewsInterval;
 let getMonthlyViewsInterval;
 let getTotalViewsInterval;
-const apiBaseUrl = "{{{apiBaseUrl}}}".replace(/&quot;/g, '');
-const apiKey = "{{apiKey}}".replace(/&quot;/g, '');
+let apiBaseUrl
+let apiKey
+
+try {
+    apiBaseUrl = window.API_BASE_URL.replace(/&quot;/g, '');
+    apiKey = window.API_KEY.replace(/&quot;/g, '');
+} catch(error) {
+    console.error('Erro ao obter variáveis de ambiente:', error);
+}
 
 function toggleNav() {
     var sidenav = document.getElementById("mySidenav");
