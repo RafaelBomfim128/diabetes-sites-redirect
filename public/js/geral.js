@@ -15,6 +15,11 @@ try {
     console.error('Erro ao obter variáveis de ambiente:', error);
 }
 
+function toggleNav() {
+    var sidenav = document.getElementById("mySidenav");
+    sidenav.classList.toggle("active");
+}
+
 function closeNav() {
     document.getElementById("mySidenav").classList.remove("active");
 }
