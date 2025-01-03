@@ -4,6 +4,15 @@ let getTotalViewsInterval;
 const apiBaseUrl = "{{{apiBaseUrl}}}".replace(/&quot;/g, '');
 const apiKey = "{{apiKey}}".replace(/&quot;/g, '');
 
+function toggleNav() {
+    var sidenav = document.getElementById("mySidenav");
+    sidenav.classList.toggle("active");
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").classList.remove("active");
+}
+
 function copyLink(link, button) {
     navigator.clipboard.writeText(link)
         .then(() => {

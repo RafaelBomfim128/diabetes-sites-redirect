@@ -145,15 +145,6 @@ async function main() {
         isFullPage: false
     });
 
-    const index = generateHtmlFromTemplate('template-index.html', {
-        downloads: downloadsSection,
-        tutoriais: tutorialsSection,
-        faq: faqSection,
-        apiBaseUrl,
-        apiKey,
-        isFullPage: true
-    });
-
     generateHtml('template-index.html', 'index.html', {
         downloads: downloadsSection,
         tutoriais: tutorialsSection,
