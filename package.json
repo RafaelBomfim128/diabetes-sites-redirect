@@ -2,11 +2,11 @@
   "name": "diabetes-sites-redirect",
   "version": "1.0.0",
   "description": "",
-  "main": "generate-index.js",
+  "main": "generate-html.js",
   "scripts": {
-    "dev": "env NODE_ENV=development node generate-index.js",
-    "prod": "env NODE_ENV=production node generate-index.js",
-    "read_only": "env NODE_ENV=read_only node generate-index.js"
+    "dev": "env NODE_ENV=development node src/generate-html.js",
+    "prod": "env NODE_ENV=production node src/generate-html.js",
+    "read_only": "env NODE_ENV=read_only node src/generate-html.js"
   },
   "keywords": [],
   "author": "",

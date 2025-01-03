@@ -1,0 +1,43 @@
+{{#if isFullPage}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriais</title>
+    <link rel="icon" href="img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="./css/geral.css">
+</head>
+
+<body>
+    {{> view-counter }}
+    <div class="container"><br>
+        {{> menu }}
+        {{/if}}
+
+        <section>
+            <h2>Tutoriais 📚🎥🛠️</h2>
+            {{#if isFullPage}}
+            {{> search-bar }}
+            {{/if}}
+            <ul>
+                {{#each links}}
+                <li>
+                    <span>{{this.title}}</span>
+                    <button onclick="window.open('{{this.fullUrl}}', '_blank')">Acessar</button>
+                    <button onclick="copyLink('{{this.newLink}}', this)">Copiar Link</button>
+                </li>
+                {{/each}}
+            </ul>
+        </section>
+
+        {{#if isFullPage}}
+    </div>
+    {{> footer }}
+    <script src="./js/geral.js"></script>
+    <script src="./js/barra-pesquisa.js"></script>
+</body>
+
+</html>
+{{/if}}

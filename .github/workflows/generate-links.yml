@@ -25,8 +25,8 @@ jobs:
     - name: Definir variáveis de ambiente
       run: echo "NODE_ENV=production" >> $GITHUB_ENV  # Definir NODE_ENV como 'production'
 
-    - name: Executar o script generate-index.js
-      run: node generate-index.js  # Executa o script para gerar os links
+    - name: Executar o script generate-html.js
+      run: node src/generate-html.js  # Executa o script para gerar o HTML
       env:
         GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
         GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}
