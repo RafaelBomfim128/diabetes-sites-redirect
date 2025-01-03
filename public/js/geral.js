@@ -1,19 +1,18 @@
 let getDailyViewsInterval;
 let getMonthlyViewsInterval;
 let getTotalViewsInterval;
-let apiBaseUrl
-let apiKey
+let apiBaseUrl;
+let apiKey;
 
 try {
-    apiBaseUrl = window.API_BASE_URL.replace(/&quot;/g, '');
-    apiKey = window.API_KEY.replace(/&quot;/g, '');
-} catch(error) {
-    console.error('Erro ao obter variáveis de ambiente:', error);
-}
+    apiBaseUrl = window.env.API_BASE_URL;
+    apiKey = window.env.API_KEY.replace(/&quot;/g, '');
 
-function toggleNav() {
-    var sidenav = document.getElementById("mySidenav");
-    sidenav.classList.toggle("active");
+    if (!apiBaseUrl || !apiKey) {
+        throw new Error('Variáveis de ambiente estão indefinidas ou inválidas.');
+    }
+} catch (error) {
+    console.error('Erro ao obter variáveis de ambiente:', error);
 }
 
 function closeNav() {
