@@ -66,7 +66,7 @@ async function main() {
             spreadsheetId,
             range,
         });
-        return res.data.values ? res.data.values.slice(1) : [];
+        return res.data.values ? res.data.values.slice(2) : [];
     };
 
     const downloads = await readSheetData('Downloads!A:C');
