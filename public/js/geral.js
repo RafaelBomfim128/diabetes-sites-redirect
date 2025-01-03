@@ -90,26 +90,23 @@ async function getTotalViews() {
 }
 
 async function incrementViews() {
-    console.log(performance.getEntriesByType("navigation")[0].type);
-    if (performance.getEntriesByType("navigation")[0].type === "navigate") {
-        try {
-            const response = await fetch(`${apiBaseUrl}/api/incrementViews`, {
-                method: 'POST',
-                headers: {
-                    'x-api-key': apiKey,
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (response.ok) {
-                getDailyViews();
-                getMonthlyViews();
-                getTotalViews();
-            } else {
-                console.error('Erro ao incrementar contador:', response.status);
-            }
-        } catch (error) {
-            console.error('Erro na requisição POST:', error);
+    try {
+        const response = await fetch(`${apiBaseUrl}/api/incrementViews`, {
+            method: 'POST',
+            headers: {
+                'x-api-key': apiKey,
+                'Content-Type': 'application/json',
+            },
+        });
+        if (response.ok) {
+            getDailyViews();
+            getMonthlyViews();
+            getTotalViews();
+        } else {
+            console.error('Erro ao incrementar contador:', response.status);
         }
+    } catch (error) {
+        console.error('Erro na requisição POST:', error);
     }
 }
 
