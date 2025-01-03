@@ -18,10 +18,25 @@ try {
 function toggleNav() {
     var sidenav = document.getElementById("mySidenav");
     sidenav.classList.toggle("active");
+    if (sidenav.classList.contains("active")) {
+        document.addEventListener('click', closeNavOnClickOutside);
+    } else {
+        document.removeEventListener('click', closeNavOnClickOutside);
+    }
 }
 
 function closeNav() {
-    document.getElementById("mySidenav").classList.remove("active");
+    var sidenav = document.getElementById("mySidenav");
+    sidenav.classList.remove("active");
+    document.removeEventListener('click', closeNavOnClickOutside);
+}
+
+function closeNavOnClickOutside(event) {
+    var sidenav = document.getElementById("mySidenav");
+    var menuButton = document.querySelector('.menu-icon');
+    if (!sidenav.contains(event.target) && !menuButton.contains(event.target)) {
+        closeNav();
+    }
 }
 
 function copyLink(link, button) {
