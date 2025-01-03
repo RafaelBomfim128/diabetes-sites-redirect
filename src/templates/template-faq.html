@@ -37,7 +37,12 @@
         {{#if isFullPage}}
     </div>
     {{> footer }}
-    <script src="./js/geral.js"></script>
+    <script>
+        window.env = {
+            API_BASE_URL: "{{apiBaseUrl}}",
+            API_KEY: "{{apiKey}}"
+        };
+    </script>    <script src="./js/geral.js"></script>
     <script src="./js/barra-pesquisa.js"></script>
     <script src="./js/faq.js"></script>
 </body>
