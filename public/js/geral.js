@@ -90,23 +90,25 @@ async function getTotalViews() {
 }
 
 async function incrementViews() {
-    try {
-        const response = await fetch(`${apiBaseUrl}/api/incrementViews`, {
-            method: 'POST',
-            headers: {
-                'x-api-key': apiKey,
-                'Content-Type': 'application/json',
-            },
-        });
-        if (response.ok) {
-            getDailyViews();
-            getMonthlyViews();
-            getTotalViews();
-        } else {
-            console.error('Erro ao incrementar contador:', response.status);
+    if (document.referrer === "" || document.referrer.indexOf(window.location.origin) !== 0) {
+        try {
+            const response = await fetch(`${apiBaseUrl}/api/incrementViews`, {
+                method: 'POST',
+                headers: {
+                    'x-api-key': apiKey,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                getDailyViews();
+                getMonthlyViews();
+                getTotalViews();
+            } else {
+                console.error('Erro ao incrementar contador:', response.status);
+            }
+        } catch (error) {
+            console.error('Erro na requisição POST:', error);
         }
-    } catch (error) {
-        console.error('Erro na requisição POST:', error);
     }
 }
 
