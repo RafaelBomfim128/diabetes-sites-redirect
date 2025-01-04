@@ -36,8 +36,6 @@ document.addEventListener('click', (e) => {
 document.addEventListener("DOMContentLoaded", () => {
     const mostRecentNotificationId = window.env.MOST_RECENT_NOTIFICATION_ID;
     localStorage.setItem("lastViewedNotification", mostRecentNotificationId);
-    const notificationIcon = document.getElementById("notification-icon");
-    notificationIcon.src = "./img/sino.png";
 });
 
 updateNotificationClasses();
