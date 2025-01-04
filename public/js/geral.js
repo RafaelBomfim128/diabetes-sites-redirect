@@ -178,3 +178,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const currentUrl = encodeURIComponent(window.location.href);
+    const pageTitle = encodeURIComponent(document.title);
+
+    document.querySelector('.share-btn.fb').href = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+    document.querySelector('.share-btn.twitter').href = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${pageTitle}`;
+    document.querySelector('.share-btn.whatsapp').href = `https://wa.me/?text=${pageTitle}%20${currentUrl}`;
+    document.querySelector('.share-btn.linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}&title=${pageTitle}`;
+});
