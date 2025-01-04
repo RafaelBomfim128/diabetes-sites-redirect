@@ -4,7 +4,7 @@ const handlebars = require('handlebars');
 const { google } = require('googleapis');
 require('dotenv').config();
 
-const domainSite = 'https://diabetesdm1.netlify.app/';
+const domainSite = 'https://tecnologiasnodiabetes.com.br/';
 const redirectsFile = path.join(__dirname, '..', 'public', '_redirects');
 const outputDir = path.join(__dirname, '..', 'public');
 const templatesDir = path.join(__dirname, 'templates');
