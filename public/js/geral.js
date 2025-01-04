@@ -155,9 +155,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
-            getDailyViews();
-            getMonthlyViews();
-            getTotalViews();
+            setTimeout(() => {
+                getDailyViews();
+                getMonthlyViews();
+                getTotalViews();
+            }, 1000);
             startAutoUpdateViews();
         } else {
             stopAutoUpdateViews();
