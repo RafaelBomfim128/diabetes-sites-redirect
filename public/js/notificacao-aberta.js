@@ -17,3 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const currentUrl = encodeURIComponent(window.location.href);
+    const notificationTitle = document.querySelector('.notification-title').textContent.trim();
+
+    document.querySelector('.share-icon.whatsapp').href = `https://wa.me/?text=${encodeURIComponent(notificationTitle)}%0A%0A${currentUrl}`;
+});

@@ -17,3 +17,28 @@
 .notification-opened .notification-title {
     text-align: center;
 }
+
+.notification-date {
+    font-size: 16px;
+    color: #333;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.share-icon img {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.share-icon .whatsapp {
+    position: absolute;
+    top: 35px;
+    right: 20px;
+    cursor: pointer;
+}
