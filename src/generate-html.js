@@ -85,6 +85,7 @@ async function main() {
     const formatFaqData = (arrItemsSheet) => {
         const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer]) => {
             if (!question || !answer) return [''];
+            answer = answer.replace(/\n/g, '<br>');
             return { question, answer };
         });
         return arrItemsSheetFormatted;
