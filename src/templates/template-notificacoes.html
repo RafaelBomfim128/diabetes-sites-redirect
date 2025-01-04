@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notificações</title>
-    <link rel="icon" href="../img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
+    <link rel="icon" href="./img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="./css/geral.css">
     <link rel="stylesheet" href="./css/notificacoes.css">
 </head>
@@ -16,11 +16,10 @@
         {{> menu }}
         <header>
             <h1>Notificações 🔔 🗣️📢</h1>
-            {{> search-bar }}
         </header>
         <main class="notification-page">
             <div class="notifications">
-                {{#each notices}}
+                {{#each notifications}}
                 <div class="notification" data-id="{{this.id}}">
                     <h3>🕘 {{this.date}}</h3>
                     <p>{{this.title}}</p>
@@ -34,7 +33,8 @@
     <script>
         window.env = {
             API_BASE_URL: "{{apiBaseUrl}}",
-            API_KEY: "{{apiKey}}"
+            API_KEY: "{{apiKey}}",
+            MOST_RECENT_NOTIFICATION_ID: "{{mostRecentNotificationId}}"
         };
     </script>
     <script src="./js/geral.js"></script>

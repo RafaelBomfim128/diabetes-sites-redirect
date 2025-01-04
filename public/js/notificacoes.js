@@ -1,13 +1,13 @@
 const isNotificationRead = (id) => {
-    const readNotices = JSON.parse(localStorage.getItem('readNotices')) || [];
-    return readNotices.includes(id);
+    const readNotifications = JSON.parse(localStorage.getItem('readNotifications')) || [];
+    return readNotifications.includes(id);
 };
 
 const markNotificationAsRead = (id) => {
-    const readNotices = JSON.parse(localStorage.getItem('readNotices')) || [];
-    if (!readNotices.includes(id)) {
-        readNotices.push(id);
-        localStorage.setItem('readNotices', JSON.stringify(readNotices));
+    const readNotifications = JSON.parse(localStorage.getItem('readNotifications')) || [];
+    if (!readNotifications.includes(id)) {
+        readNotifications.push(id);
+        localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
     }
 };
 
@@ -31,6 +31,13 @@ document.addEventListener('click', (e) => {
             notification.classList.add('read');
         }
     }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const mostRecentNotificationId = window.env.MOST_RECENT_NOTIFICATION_ID;
+    localStorage.setItem("lastViewedNotification", mostRecentNotificationId);
+    const notificationIcon = document.getElementById("notification-icon");
+    notificationIcon.src = "./img/sino.png";
 });
 
 updateNotificationClasses();

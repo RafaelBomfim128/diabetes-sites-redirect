@@ -5,23 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notificações</title>
-    <link rel="icon" href="../img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
+    <link rel="icon" href="./img/tecnologias-no-diabetes.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="./css/geral.css">
-    <link rel="stylesheet" href="./css/notificacoes.css">
+    <link rel="stylesheet" href="./css/notificacao-aberta.css">
 </head>
 
 <body>
     {{> view-counter }}
     <div class="container"><br>
         {{> menu }}
+        {{> notificacoes }}
         <header>
             <h3>{{ title }}</h3>
         </header>
-        <div class="notification-opened" data-id="{{notice.id}}">
-            <h3>🕘 {{ notice.date }}</h3>
+        <div class="notification-opened" data-id="{{notification.id}}">
+            <h3>🕘 {{ notification.date }}</h3>
             <a class="notification-return-up" href="notificacoes.html">Retornar</a>
-            <h3 class="notification-title">{{ notice.title }}</h3>
-            <p class="notification-content">{{ notice.content }}</p>
+            <h3 class="notification-title">{{ notification.title }}</h3>
+            <p class="notification-content">{{ notification.content }}</p>
             <a class="notification-return-down" href="notificacoes.html">Retornar</a>
         </div>
     </div>
@@ -29,12 +30,13 @@
     <script>
         window.env = {
             API_BASE_URL: "{{apiBaseUrl}}",
-            API_KEY: "{{apiKey}}"
+            API_KEY: "{{apiKey}}",
+            MOST_RECENT_NOTIFICATION_ID: "{{mostRecentNotificationId}}"
         };
     </script>
     <script src="./js/geral.js"></script>
     <script src="./js/barra-pesquisa.js"></script>
-    <script src="./js/notificacoes.js"></script>
+    <script src="./js/notificacao-aberta.js"></script>
 </body>
 
 </html>

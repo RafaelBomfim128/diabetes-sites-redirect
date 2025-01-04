@@ -161,3 +161,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const notificationIcon = document.getElementById("notification-icon");
+    const mostRecentNotificationId = window.env.MOST_RECENT_NOTIFICATION_ID;
+    const lastViewedNotificationId = localStorage.getItem("lastViewedNotification");
+
+    if (!lastViewedNotificationId || lastViewedNotificationId !== mostRecentNotificationId) {
+        notificationIcon.src = "./img/sino-nao-lida.png";
+    }
+
+    const notificationBell = document.querySelector(".notification-bell a");
+    notificationBell.addEventListener("click", () => {
+        localStorage.setItem("lastViewedNotification", mostRecentNotificationId);
+        notificationIcon.src = "./img/sino.png";
+    });
+});
+

@@ -72,7 +72,7 @@ async function main() {
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:C');
     const faq = await readSheetData('FAQ!A:B');
-    const notices = await readSheetData('Avisos!A:D');
+    const notifications = await readSheetData('Avisos!A:D');
 
     const formatLinksData = (arrItemsSheet) => {
         const arrItemsSheetFormatted = arrItemsSheet.map(([title, shortPath, fullUrl]) => {
@@ -90,7 +90,7 @@ async function main() {
         return arrItemsSheetFormatted;
     };
 
-    const formatNoticesData = (arrItemsSheet) => {
+    const formatNotificationsData = (arrItemsSheet) => {
         arrItemsSheet = arrItemsSheet.reverse();
         const arrItemsSheetFormatted = arrItemsSheet.map(([title, content, date, id]) => {
             if (!title || !content || !date || !id) return [''];
@@ -102,7 +102,7 @@ async function main() {
     const downloadsFormatted = formatLinksData(downloads);
     const tutorialsFormatted = formatLinksData(tutorials);
     const faqFormatted = formatFaqData(faq);
-    const noticesFormatted = formatNoticesData(notices);
+    const notificationsFormatted = formatNotificationsData(notifications);
 
     if (NODE_ENV !== 'read_only') {
         const updateSheetLinks = async (sheetName, links) => {
@@ -156,12 +156,15 @@ async function main() {
         isFullPage: false
     });
 
+    const mostRecentNotificationId = notificationsFormatted[0].id
+
     generateHtml('template-index.html', 'index.html', {
         downloads: downloadsSection,
         tutoriais: tutorialsSection,
         faq: faqSection,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
@@ -170,6 +173,7 @@ async function main() {
         links: downloadsFormatted,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
@@ -177,6 +181,7 @@ async function main() {
         links: tutorialsFormatted,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
@@ -184,21 +189,24 @@ async function main() {
         questionAnswer: faqFormatted,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
     generateHtml('template-notificacoes.html', 'notificacoes.html', {
-        notices: noticesFormatted,
+        notifications: notificationsFormatted,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
-    noticesFormatted.forEach((notice) => {
-        generateHtml('template-notificacao-aberta.html', `detalhes-aviso-${formatPath(notice.id)}.html`, {
-            notice,
+    notificationsFormatted.forEach((notification) => {
+        generateHtml('template-notificacao-aberta.html', `detalhes-aviso-${formatPath(notification.id)}.html`, {
+            notification: notification,
             apiBaseUrl,
             apiKey,
+            mostRecentNotificationId,
             isFullPage: true
         });
     });
