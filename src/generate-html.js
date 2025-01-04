@@ -66,12 +66,13 @@ async function main() {
             spreadsheetId,
             range,
         });
-        return res.data.values ? res.data.values.slice(1) : [];
+        return res.data.values ? res.data.values.slice(2) : [];
     };
 
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:C');
     const faq = await readSheetData('FAQ!A:B');
+    const notices = await readSheetData('Avisos!A:D');
 
     const formatLinksData = (arrItemsSheet) => {
         const arrItemsSheetFormatted = arrItemsSheet.map(([title, shortPath, fullUrl]) => {
@@ -89,9 +90,19 @@ async function main() {
         return arrItemsSheetFormatted;
     };
 
+    const formatNoticesData = (arrItemsSheet) => {
+        arrItemsSheet = arrItemsSheet.reverse();
+        const arrItemsSheetFormatted = arrItemsSheet.map(([title, content, date, id]) => {
+            if (!title || !content || !date || !id) return [''];
+            return { title, content, date, id };
+        });
+        return arrItemsSheetFormatted;
+    }
+
     const downloadsFormatted = formatLinksData(downloads);
     const tutorialsFormatted = formatLinksData(tutorials);
     const faqFormatted = formatFaqData(faq);
+    const noticesFormatted = formatNoticesData(notices);
 
     if (NODE_ENV !== 'read_only') {
         const updateSheetLinks = async (sheetName, links) => {
@@ -174,6 +185,22 @@ async function main() {
         apiBaseUrl,
         apiKey,
         isFullPage: true
+    });
+
+    generateHtml('template-notificacoes.html', 'notificacoes.html', {
+        notices: noticesFormatted,
+        apiBaseUrl,
+        apiKey,
+        isFullPage: true
+    });
+
+    noticesFormatted.forEach((notice) => {
+        generateHtml('template-notificacao-aberta.html', `detalhes-aviso-${formatPath(notice.id)}.html`, {
+            notice,
+            apiBaseUrl,
+            apiKey,
+            isFullPage: true
+        });
     });
 }
 
