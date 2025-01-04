@@ -94,6 +94,7 @@ async function main() {
     const formatNotificationsData = (arrItemsSheet) => {
         arrItemsSheet = arrItemsSheet.reverse();
         const arrItemsSheetFormatted = arrItemsSheet.map(([title, content, date, id]) => {
+            content = content.replace(/\n/g, '<br>');
             if (!title || !content || !date || !id) return [''];
             return { title, content, date, id };
         });
