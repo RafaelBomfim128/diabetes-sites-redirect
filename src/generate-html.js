@@ -4,7 +4,7 @@ const handlebars = require('handlebars');
 const { google } = require('googleapis');
 require('dotenv').config();
 
-const domainSite = 'https://diabetesdm1.netlify.app/';
+const domainSite = 'https://tecnologiasnodiabetes.com.br/';
 const redirectsFile = path.join(__dirname, '..', 'public', '_redirects');
 const outputDir = path.join(__dirname, '..', 'public');
 const templatesDir = path.join(__dirname, 'templates');
@@ -72,6 +72,7 @@ async function main() {
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:C');
     const faq = await readSheetData('FAQ!A:B');
+    const notifications = await readSheetData('Avisos!A:D');
 
     const formatLinksData = (arrItemsSheet) => {
         const arrItemsSheetFormatted = arrItemsSheet.map(([title, shortPath, fullUrl]) => {
@@ -84,14 +85,25 @@ async function main() {
     const formatFaqData = (arrItemsSheet) => {
         const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer]) => {
             if (!question || !answer) return [''];
+            answer = answer.replace(/\n/g, '<br>');
             return { question, answer };
         });
         return arrItemsSheetFormatted;
     };
 
+    const formatNotificationsData = (arrItemsSheet) => {
+        arrItemsSheet = arrItemsSheet.reverse();
+        const arrItemsSheetFormatted = arrItemsSheet.map(([title, content, date, id]) => {
+            if (!title || !content || !date || !id) return [''];
+            return { title, content, date, id };
+        });
+        return arrItemsSheetFormatted;
+    }
+
     const downloadsFormatted = formatLinksData(downloads);
     const tutorialsFormatted = formatLinksData(tutorials);
     const faqFormatted = formatFaqData(faq);
+    const notificationsFormatted = formatNotificationsData(notifications);
 
     if (NODE_ENV !== 'read_only') {
         const updateSheetLinks = async (sheetName, links) => {
@@ -145,12 +157,15 @@ async function main() {
         isFullPage: false
     });
 
+    const mostRecentNotificationId = notificationsFormatted[0].id
+
     generateHtml('template-index.html', 'index.html', {
         downloads: downloadsSection,
         tutoriais: tutorialsSection,
         faq: faqSection,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
@@ -159,6 +174,7 @@ async function main() {
         links: downloadsFormatted,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
@@ -166,6 +182,7 @@ async function main() {
         links: tutorialsFormatted,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
     });
 
@@ -173,7 +190,26 @@ async function main() {
         questionAnswer: faqFormatted,
         apiBaseUrl,
         apiKey,
+        mostRecentNotificationId,
         isFullPage: true
+    });
+
+    generateHtml('template-notificacoes.html', 'notificacoes.html', {
+        notifications: notificationsFormatted,
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+        isFullPage: true
+    });
+
+    notificationsFormatted.forEach((notification) => {
+        generateHtml('template-notificacao-aberta.html', `detalhes-aviso-${formatPath(notification.id)}.html`, {
+            notification: notification,
+            apiBaseUrl,
+            apiKey,
+            mostRecentNotificationId,
+            isFullPage: true
+        });
     });
 }
 

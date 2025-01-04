@@ -1,0 +1,19 @@
+.notification-opened {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.notification-opened .notification-return-up {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.notification-opened .notification-title {
+    text-align: center;
+}

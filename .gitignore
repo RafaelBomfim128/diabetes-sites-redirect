@@ -102,4 +102,5 @@ index.js
 /public/*
 # Exceto as pastas css e js
 !/public/css
+!/public/img
 !/public/js
