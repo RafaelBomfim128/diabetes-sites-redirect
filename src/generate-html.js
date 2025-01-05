@@ -115,7 +115,7 @@ async function main() {
 
             await sheets.spreadsheets.values.update({
                 spreadsheetId,
-                range: `${sheetName}!D2:D`,
+                range: `${sheetName}!D3:D`,
                 valueInputOption: 'USER_ENTERED',
                 requestBody: { values: updatedLinks },
             });
