@@ -38,9 +38,11 @@ li {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     transition: background-color 0.3s ease;
-    min-height: 45px;
+    min-height: 65px;
+    position: relative;
+    gap: 10px;
 }
 
 li span {
@@ -49,6 +51,13 @@ li span {
     white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: calc(100% - 120px);
+}
+
+li .buttons {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
 }
 
 button {
@@ -59,8 +68,12 @@ button {
     color: white;
     cursor: pointer;
     font-weight: bold;
-    margin-left: 5px;
+    margin-bottom: 5px;
     flex-shrink: 0;
+}
+
+button:last-child {
+    margin-bottom: 0;
 }
 
 button:hover {
