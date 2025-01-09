@@ -31,8 +31,10 @@
                 {{#each links}}
                 <li>
                     <span>{{this.title}}</span>
-                    <button onclick="window.open('{{this.fullUrl}}', '_blank')">Baixar</button>
-                    <button onclick="copyLink('{{this.newLink}}', this)">Copiar Link</button>
+                    <div class="buttons">
+                        <button onclick="window.open('{{this.fullUrl}}', '_blank')">Baixar</button>
+                        <button onclick="copyLink('{{this.newLink}}', this)">Copiar Link</button>
+                    </div>
                 </li>
                 {{/each}}
             </ul>
