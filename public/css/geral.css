@@ -20,6 +20,11 @@ body {
     position: relative;
 }
 
+.container section h2{
+    color:#505050;
+    top:149px;
+}
+
 h1,
 h2 {
     color: #0078d7;
@@ -29,6 +34,32 @@ h2 {
 ul {
     list-style: none;
     padding: 0;
+}
+
+.container ul button{
+    background-image: linear-gradient(to right, #37a5ff 0%, #0078d7 100%);
+    background-color:#5bb5ff;
+    border-top-right-radius:20px;
+    border-bottom-left-radius:20px;
+    border-top-left-radius:20px;
+    border-bottom-right-radius:20px;
+}
+
+.container ul li{
+    background-color:rgba(41,128,185,0.05);
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.container section ul{
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.category-title,
+#content-tutorials ul{
+    margin-left: -15px;
+    margin-right: -10px;
 }
 
 li {
@@ -80,11 +111,49 @@ button:hover {
     background-color: #0056b3;
 }
 
+.category {
+    margin-bottom: 20px;
+}
+
+.category-title {
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    color: #0078d7;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.category-content {
+    padding-left: 5px;
+    margin-top: 10px;
+}
+
+.arrow {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+    border-left: 2px solid #555;
+    border-bottom: 2px solid #555;
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease;
+}
+
+.arrow.active {
+    transform: rotate(-225deg);
+}
+
 .view-counter {
+    font-size: 13px;
+    line-height: 12px;
     position: fixed;
     top: 20px;
     right: 0px;
-    background-color: rgba(0, 120, 215, 0.1);
+    background-color: #ecf0f1;
     color: #333;
     padding: 5px 10px;
     border-radius: 8px;

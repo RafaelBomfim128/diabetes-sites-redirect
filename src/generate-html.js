@@ -22,87 +22,18 @@ const auth = new google.auth.GoogleAuth({
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
-// Função para formatar o caminho curto
-function formatPath(shortPath) {
-    return shortPath
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9\-]/g, '');
-}
-
-function registerPartials() {
-    const partialFiles = fs.readdirSync(partialsDir);
-    partialFiles.forEach((file) => {
-        const partialName = path.basename(file, '.html'); // Exemplo: 'footer.html' -> 'footer'
-        const partialContent = fs.readFileSync(path.join(partialsDir, file), 'utf8');
-        handlebars.registerPartial(partialName, partialContent);
-    });
-}
-
-function generateHtml(templateFileName, outputFileName, data) {
-    const templateFilePath = path.join(templatesDir, templateFileName);
-    const templateContent = fs.readFileSync(templateFilePath, 'utf8');
-    const template = handlebars.compile(templateContent);
-
-    const htmlContent = template(data);
-    const outputFilePath = path.join(outputDir, outputFileName);
-    fs.writeFileSync(outputFilePath, htmlContent);
-
-    console.log(`${outputFileName} gerado com sucesso!`);
-}
-
-function generateRedirects(links) {
-    return links
-        .map(([title, shortPath, fullUrl]) => `${formatPath(shortPath)}  ${fullUrl}  200`)
-        .join('\n');
-}
+const sheets = google.sheets({ version: 'v4', auth });
 
 async function main() {
     const sheets = google.sheets({ version: 'v4', auth });
 
-    const readSheetData = async (range) => {
-        const res = await sheets.spreadsheets.values.get({
-            spreadsheetId,
-            range,
-        });
-        return res.data.values ? res.data.values.slice(2) : [];
-    };
-
     const downloads = await readSheetData('Downloads!A:C');
-    const tutorials = await readSheetData('Tutoriais!A:C');
+    const tutorials = await readSheetData('Tutoriais2!A:E');
     const faq = await readSheetData('FAQ!A:B');
     const notifications = await readSheetData('Avisos!A:D');
 
-    const formatLinksData = (arrItemsSheet) => {
-        const arrItemsSheetFormatted = arrItemsSheet.map(([title, shortPath, fullUrl]) => {
-            if (!title || !shortPath || !fullUrl) return [''];
-            return { title, shortPath, fullUrl, newLink: `${domainSite}${formatPath(shortPath)}` };
-        });
-        return arrItemsSheetFormatted;
-    };
-
-    const formatFaqData = (arrItemsSheet) => {
-        const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer]) => {
-            if (!question || !answer) return [''];
-            answer = answer.replace(/\n/g, '<br>');
-            return { question, answer };
-        });
-        return arrItemsSheetFormatted;
-    };
-
-    const formatNotificationsData = (arrItemsSheet) => {
-        arrItemsSheet = arrItemsSheet.reverse();
-        const arrItemsSheetFormatted = arrItemsSheet.map(([title, content, date, id]) => {
-            content = content.replace(/\n/g, '<br>');
-            if (!title || !content || !date || !id) return [''];
-            return { title, content, date, id };
-        });
-        return arrItemsSheetFormatted;
-    }
-
-    const downloadsFormatted = formatLinksData(downloads);
-    const tutorialsFormatted = formatLinksData(tutorials);
+    const downloadsFormatted = formatLinksDownloads(downloads);
+    const tutorialsFormatted = formatLinksTutorials(tutorials);
     const faqFormatted = formatFaqData(faq);
     const notificationsFormatted = formatNotificationsData(notifications);
 
@@ -134,13 +65,6 @@ async function main() {
     console.log('_redirects gerado com sucesso!');
 
     registerPartials();
-
-    function generateHtmlFromTemplate(templateFileName, data) {
-        const templateFilePath = path.join(templatesDir, templateFileName);
-        const templateContent = fs.readFileSync(templateFilePath, 'utf8');
-        const template = handlebars.compile(templateContent);
-        return template(data);
-    }
 
     //Geração de seções para o index.html
     const downloadsSection = generateHtmlFromTemplate('template-downloads.html', {
@@ -218,3 +142,111 @@ main().catch(error => {
     console.error("Erro durante a execução do script:", error);
     process.exit(1);
 });
+
+async function readSheetData(range) {
+    const res = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range,
+    });
+    return res.data.values ? res.data.values.slice(2) : [];
+};
+
+// Função para formatar o caminho curto
+function formatPath(shortPath) {
+    return shortPath
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9\-]/g, '');
+}
+
+function generateRedirects(links) {
+    return links
+        .map(([title, shortPath, fullUrl]) => `${formatPath(shortPath)}  ${fullUrl}  200`)
+        .join('\n');
+}
+
+function registerPartials() {
+    const partialFiles = fs.readdirSync(partialsDir);
+    partialFiles.forEach((file) => {
+        const partialName = path.basename(file, '.html'); // Exemplo: 'footer.html' -> 'footer'
+        const partialContent = fs.readFileSync(path.join(partialsDir, file), 'utf8');
+        handlebars.registerPartial(partialName, partialContent);
+    });
+}
+
+function generateHtml(templateFileName, outputFileName, data) {
+    const templateFilePath = path.join(templatesDir, templateFileName);
+    const templateContent = fs.readFileSync(templateFilePath, 'utf8');
+    const template = handlebars.compile(templateContent);
+
+    const htmlContent = template(data);
+    const outputFilePath = path.join(outputDir, outputFileName);
+    fs.writeFileSync(outputFilePath, htmlContent);
+
+    console.log(`${outputFileName} gerado com sucesso!`);
+}
+
+function generateHtmlFromTemplate(templateFileName, data) {
+    const templateFilePath = path.join(templatesDir, templateFileName);
+    const templateContent = fs.readFileSync(templateFilePath, 'utf8');
+    const template = handlebars.compile(templateContent);
+    return template(data);
+}
+
+function groupLinksByCategory(links, order) {
+    const grouped = links.reduce((accumulator, link) => {
+      if (!accumulator[link.category]) {
+        accumulator[link.category] = [];
+      }
+      accumulator[link.category].push(link);
+      return accumulator;
+    }, {});
+  
+    const orderedGrouped = {};
+    order.forEach(category => {
+      if (grouped[category]) {
+        orderedGrouped[category] = grouped[category];
+        delete grouped[category];
+      }
+    });
+  
+    return { ...orderedGrouped, ...grouped };
+}
+
+function formatLinksDownloads(arrItemsSheet) {
+    const arrItemsSheetFormatted = arrItemsSheet.map(([title, shortPath, fullUrl, tag]) => {
+        if (!title || !shortPath || !fullUrl) return [''];
+        return { title, shortPath, fullUrl, newLink: `${domainSite}${formatPath(shortPath)}` };
+    });
+    return arrItemsSheetFormatted;
+}
+
+const orderTutorials = ['Ponto de partida', 'xDrip', 'Android APS', "Sensores"];
+function formatLinksTutorials(arrItemsSheet) {
+    const objItemsSheet = arrItemsSheet.map(([title, shortPath, fullUrl, category, tag]) => {
+        if (!title || !shortPath || !fullUrl || !category || !tag) return [''];
+        return { title, shortPath, fullUrl, category, tag, newLink: `${domainSite}${formatPath(shortPath)}` };
+    });
+    const groupedLinks = groupLinksByCategory(objItemsSheet, orderTutorials);
+    return groupedLinks;
+}
+
+function formatFaqData(arrItemsSheet) {
+    const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer]) => {
+        if (!question || !answer) return [''];
+        answer = answer.replace(/\n/g, '<br>');
+        return { question, answer };
+    });
+    return arrItemsSheetFormatted;
+}
+
+function formatNotificationsData(arrItemsSheet) {
+    arrItemsSheet = arrItemsSheet.reverse();
+    const arrItemsSheetFormatted = arrItemsSheet.map(([title, content, date, id]) => {
+        content = content.replace(/\n/g, '<br>');
+        if (!title || !content || !date || !id) return [''];
+        return { title, content, date, id };
+    });
+    return arrItemsSheetFormatted;
+}

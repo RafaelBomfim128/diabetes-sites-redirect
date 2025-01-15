@@ -15,6 +15,19 @@ try {
     console.error('Erro ao obter variáveis de ambiente:', error);
 }
 
+function toggleCategory(element, categoryName) {
+    const content = document.getElementById('content-' + categoryName);
+    const arrow = element.querySelector('.arrow');
+
+    arrow.classList.toggle('active');
+
+    if (content.style.display === 'block' || content.style.display === '') {
+        content.style.display = 'none';
+    } else {
+        content.style.display = 'block';
+    }
+}
+
 function toggleNav() {
     var sidenav = document.getElementById("mySidenav");
     sidenav.classList.toggle("active");
