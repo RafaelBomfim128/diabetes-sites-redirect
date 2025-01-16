@@ -38,7 +38,7 @@ async function main() {
     const notificationsFormatted = formatNotificationsData(notifications);
 
     if (NODE_ENV !== 'read_only') {
-        const updateSheetLinks = async (sheetName, links) => {
+        const updateSheetLinks = async (sheetName, column, links) => {
             const updatedLinks = links.map(([title, shortPath, fullUrl]) => {
                 if (!title || !shortPath || !fullUrl) return [''];
                 return [`${domainSite}${formatPath(shortPath)}`];
@@ -46,7 +46,7 @@ async function main() {
 
             await sheets.spreadsheets.values.update({
                 spreadsheetId,
-                range: `${sheetName}!D3:D`,
+                range: `${sheetName}!${column}3`,
                 valueInputOption: 'USER_ENTERED',
                 requestBody: { values: updatedLinks },
             });
@@ -55,8 +55,8 @@ async function main() {
         };
 
         //Atualização da coluna "Novo link" (D) nas abas Downloads e Tutoriais
-        await updateSheetLinks('Downloads', downloads);
-        await updateSheetLinks('Tutoriais', tutorials);
+        await updateSheetLinks('Downloads', 'D', downloads);
+        await updateSheetLinks('Tutoriais', 'F', tutorials);
     }
 
     //_redirects
