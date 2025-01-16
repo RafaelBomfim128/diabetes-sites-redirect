@@ -1,0 +1,15 @@
+:root {
+    --primary-color: #0078d7;
+    --secondary-color: #505050;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+    --container-bg: #fff;
+    --container-shadow: rgba(0, 0, 0, 0.1);
+    --button-bg: linear-gradient(to right, #37a5ff 0%, #0078d7 100%);
+    --button-hover-bg: #0056b3;
+    --light-bg: rgba(41,128,185,0.05);
+    --border-color: #ddd;
+    --faq-question-bg: rgba(0, 120, 215, 0.1);
+    --faq-question-hover-bg: rgba(0, 120, 215, 0.4);
+    --faq-answer-bg: #f9f9f9;
+}

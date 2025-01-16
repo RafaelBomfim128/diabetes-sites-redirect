@@ -28,7 +28,7 @@ async function main() {
     const sheets = google.sheets({ version: 'v4', auth });
 
     const downloads = await readSheetData('Downloads!A:C');
-    const tutorials = await readSheetData('Tutoriais2!A:E');
+    const tutorials = await readSheetData('Tutoriais!A:E');
     const faq = await readSheetData('FAQ!A:B');
     const notifications = await readSheetData('Avisos!A:D');
 
@@ -222,7 +222,7 @@ function formatLinksDownloads(arrItemsSheet) {
     return arrItemsSheetFormatted;
 }
 
-const orderTutorials = ['Ponto de partida', 'xDrip', 'Android APS', "Sensores"];
+const orderTutorials = ['Ponto de partida', 'xDrip', 'Android APS', "Sensores", 'Nightscout', 'Relógios', 'Bombas', 'Outros'];
 function formatLinksTutorials(arrItemsSheet) {
     const categoryIcons = {
         'Ponto de partida': './img/icons/icon-ponto-partida.png',
