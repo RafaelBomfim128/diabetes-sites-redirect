@@ -1,7 +1,9 @@
+@import url('variables.css');
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,19 +12,23 @@ body {
 }
 
 .container {
-    background-color: #fff;
+    background-color: var(--container-bg);
     padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px var(--container-shadow);
     max-width: 800px;
     width: 100%;
     padding-left: 30px;
     position: relative;
 }
 
-h1,
-h2 {
-    color: #0078d7;
+.container section h2 {
+    color: var(--secondary-color);
+    top: 149px;
+}
+
+h1, h2 {
+    color: var(--primary-color);
     text-align: center;
 }
 
@@ -31,12 +37,35 @@ ul {
     padding: 0;
 }
 
+.container ul button {
+    background-image: var(--button-bg);
+    background-color: #5bb5ff;
+    border-radius: 20px;
+}
+
+.container ul li {
+    background-color: var(--light-bg);
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.container section ul{
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.category-title,
+#content-tutorials ul{
+    margin-left: -15px;
+    margin-right: -10px;
+}
+
 li {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     margin-bottom: 15px;
     transition: background-color 0.3s ease;
@@ -61,10 +90,10 @@ li .buttons {
 }
 
 button {
-    padding: 8px 8px;
+    padding: 8px;
     border: none;
     border-radius: 5px;
-    background-color: #0078d7;
+    background-color: var(--primary-color);
     color: white;
     cursor: pointer;
     font-weight: bold;
@@ -77,18 +106,76 @@ button:last-child {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: var(--button-hover-bg);
+}
+
+.category {
+    margin-bottom: 20px;
+}
+
+.category-title {
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.category-content {
+    padding-left: 5px;
+    margin-top: 10px;
+}
+
+.category-icon {
+    width: 72px;
+    height: 72px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+#category-Sensores .category-icon,
+#category-Bombas .category-icon {
+    width: 150px;
+}
+
+#category-Nightscout .category-icon {
+    width: 50px;
+}
+
+#category-Relógios .category-icon {
+    width: 100px;
+}
+
+.arrow {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+    border-left: 2px solid #555;
+    border-bottom: 2px solid #555;
+    transform: rotate(-45deg);
+    transition: transform 0.3s ease;
+}
+
+.arrow.active {
+    transform: rotate(-225deg);
 }
 
 .view-counter {
+    font-size: 13px;
+    line-height: 12px;
     position: fixed;
     top: 20px;
-    right: 0px;
-    background-color: rgba(0, 120, 215, 0.1);
-    color: #333;
+    right: 0;
+    background-color: #ecf0f1;
+    color: var(--text-color);
     padding: 5px 10px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px var(--container-shadow);
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -130,25 +217,25 @@ footer {
     margin-bottom: 20px;
     padding: 10px;
     width: 100%;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     box-sizing: border-box;
 }
 
 .sidenav {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #333;
+    color: var(--text-color);
     width: 0;
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #fff;
+    background-color: var(--container-bg);
     overflow-x: hidden;
     transition: width 0.5s;
     padding-top: 75px;
     min-height: calc(100% - 75px);
     height: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 0 5px var(--container-shadow);
     z-index: 999;
 }
 
@@ -160,18 +247,18 @@ footer {
     padding: 8px 8px 12px 32px;
     text-decoration: none;
     font-size: 18px;
-    color: #333;
+    color: var(--text-color);
     display: block;
     transition: 0.3s;
 }
 
 .sidenav a:hover {
-    color: #0078d7;
+    color: var(--primary-color);
 }
 
 .sidenav .closebtn {
     position: absolute;
-    top: 0px;
+    top: 0;
     right: 25px;
     font-size: 36px;
     margin-left: 50px;
@@ -180,16 +267,16 @@ footer {
 }
 
 .menu-icon {
-    position: absolute; /* Fixo na tela */
+    position: absolute;
     top: 20px;
     left: 20px;
-    background: none; /* Fundo transparente */
+    background: none;
     border: none;
     padding: 0;
-    font-size: 30px; /* Tamanho do ícone */
-    color: #0078d7;
+    font-size: 30px;
+    color: var(--primary-color);
     cursor: pointer;
-    z-index: 1000; /* Acima do menu lateral */
+    z-index: 1000;
 }
 
 button.menu-icon {

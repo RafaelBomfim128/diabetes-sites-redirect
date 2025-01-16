@@ -23,21 +23,25 @@
         {{/if}}
 
         <section>
-            <h2>Downloads 💾📂</h2>
-            {{#if isFullPage}}
-            {{> search-bar }}
-            {{/if}}
-            <ul>
-                {{#each links}}
-                <li>
-                    <span>{{this.title}}</span>
-                    <div class="buttons">
-                        <button onclick="window.open('{{this.fullUrl}}', '_blank')">Baixar</button>
-                        <button onclick="copyLink('{{this.newLink}}', this)">Copiar Link</button>
-                    </div>
-                </li>
-                {{/each}}
-            </ul>
+            <h2 class="category-title" onclick="toggleCategory(this, 'downloads')">Downloads 💾📂
+                <span class="arrow"></span>
+            </h2>
+            <div class="category-content" id="content-downloads">
+                {{#if isFullPage}}
+                {{> search-bar }}
+                {{/if}}
+                <ul>
+                    {{#each links}}
+                    <li>
+                        <span>{{this.title}}</span>
+                        <div class="buttons">
+                            <button onclick="window.open('{{this.fullUrl}}', '_blank')">Baixar</button>
+                            <button onclick="copyLink('{{this.newLink}}', this)">Copiar Link</button>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
         </section>
 
         {{#if isFullPage}}

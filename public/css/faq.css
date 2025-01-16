@@ -1,10 +1,12 @@
+@import url('variables.css');
+
 .faq {
     margin-top: 20px;
 }
 
 .faq-item {
     margin-bottom: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     overflow: hidden;
 }
@@ -13,10 +15,10 @@
     width: 100%;
     text-align: left;
     padding: 10px;
-    margin-left: 0px;
+    margin: 0;
     font-size: 16px;
     font-weight: bold;
-    background-color: rgba(0, 120, 215, 0.1);
+    background-color: var(--faq-question-bg);
     color: #0056a3;
     border: none;
     cursor: pointer;
@@ -28,18 +30,18 @@
 
 @media (hover: hover) {
     .faq-question:hover {
-        background-color: rgba(0, 120, 215, 0.4);
+        background-color: var(--faq-question-hover-bg);
     }
 }
 
 @media (hover: none) {
     .faq-question:hover {
-        background-color: rgba(0, 120, 215, 0.1);
+        background-color: var(--faq-question-bg);
     }
 }
 
 .faq-question:active {
-    background-color: rgba(0, 120, 215, 0.1);
+    background-color: var(--faq-question-bg);
 }
 
 .faq-question .arrow {
@@ -62,7 +64,7 @@
     max-height: 0;
     overflow: hidden;
     padding: 0 10px;
-    background-color: #f9f9f9;
+    background-color: var(--faq-answer-bg);
     font-size: 14px;
     line-height: 1.6;
     transition: max-height 0.3s ease, padding 0.3s ease;
