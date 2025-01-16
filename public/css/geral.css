@@ -140,7 +140,8 @@ button:hover {
     /* border-radius: 50%; Deixa as imagens circulares */
 }
 
-#category-Sensores .category-icon {
+#category-Sensores .category-icon,
+#category-Bombas .category-icon {
     width: 130px;
 }
 
@@ -150,10 +151,6 @@ button:hover {
 
 #category-Relógios .category-icon {
     width: 100px;
-}
-
-#category-Bombas .category-icon {
-    width: 115px;
 }
 
 .arrow {
