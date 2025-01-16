@@ -224,13 +224,34 @@ function formatLinksDownloads(arrItemsSheet) {
 
 const orderTutorials = ['Ponto de partida', 'xDrip', 'Android APS', "Sensores"];
 function formatLinksTutorials(arrItemsSheet) {
+    const categoryIcons = {
+        'Ponto de partida': './img/icons/icon-ponto-partida.png',
+        'xDrip': './img/icons/icon-xdrip.png',
+        'Android APS': './img/icons/icon-android-aps.png',
+        'Sensores': './img/icons/icon-sensores.png',
+        'Nightscout': './img/icons/icon-nightscout.png',
+        'Relógios': './img/icons/icon-relogios.png',
+        'Bombas': './img/icons/icon-bombas.png',
+        'Outros': './img/icons/icon-tutorial-default.png',
+    };
+
     const objItemsSheet = arrItemsSheet.map(([title, shortPath, fullUrl, category, tag]) => {
         if (!title || !shortPath || !fullUrl || !category || !tag) return [''];
-        return { title, shortPath, fullUrl, category, tag, newLink: `${domainSite}${formatPath(shortPath)}` };
+        return { 
+            title, 
+            shortPath, 
+            fullUrl, 
+            category, 
+            tag, 
+            icon: categoryIcons[category] || './img/icons/icon-tutorial-default.png', // Define um ícone padrão se a categoria não tiver um específico
+            newLink: `${domainSite}${formatPath(shortPath)}` 
+        };
     });
+
     const groupedLinks = groupLinksByCategory(objItemsSheet, orderTutorials);
     return groupedLinks;
 }
+
 
 function formatFaqData(arrItemsSheet) {
     const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer]) => {

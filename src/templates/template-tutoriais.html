@@ -33,6 +33,7 @@
                 {{#each links}}
                 <div class="category" id="category-{{@key}}">
                     <h3 class="category-title" onclick="toggleCategory(this, '{{@key}}')">
+                        <img src="{{this.[0].icon}}" alt="{{@key}} icon" class="category-icon" />
                         {{@key}} <span class="arrow"></span>
                     </h3>
                     <ul class="category-content" id="content-{{@key}}">
