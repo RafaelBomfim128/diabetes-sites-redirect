@@ -80,3 +80,9 @@
     display: block;
     margin: 0 auto;
 }
+
+.faq-item.highlighted {
+    outline: 2px solid var(--primary-color);
+    background-color: var(--faq-question-bg);
+    box-shadow: 0 4px 8px var(--container-shadow);
+}

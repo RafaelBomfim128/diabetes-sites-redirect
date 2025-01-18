@@ -35,19 +35,26 @@ document.addEventListener("DOMContentLoaded", () => {
 //Scrolla para a pergunta do FAQ e abre a resposta
 document.addEventListener("DOMContentLoaded", () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const faqId = urlParams.get('id');
+    const faqId = urlParams.get('id'); // Obtém o parâmetro 'id' da URL
 
     if (faqId) {
         const targetFaq = document.querySelector(`.faq-item[data-id="${faqId}"]`);
 
         if (targetFaq) {
+            //Scroll
             targetFaq.scrollIntoView({ behavior: 'smooth' });
 
-            const faqAnswer = targetFaq.querySelector('.faq-answer');
-            if (faqAnswer && faqAnswer.style.display === 'none') {
-                faqAnswer.style.display = 'block';
-            }
+            //Destaque
+            targetFaq.classList.add('highlighted');
+
+            //Abre a resposta
+            const button = targetFaq.querySelector('.faq-question');
+            const answer = button.nextElementSibling;
+
+            button.classList.add('active'); // Adiciona a classe para indicar ativo
+            answer.style.maxHeight = answer.scrollHeight + "px"; // Expande a altura
+            answer.style.paddingTop = "10px";
+            answer.style.paddingBottom = "10px";
         }
     }
 });
-
