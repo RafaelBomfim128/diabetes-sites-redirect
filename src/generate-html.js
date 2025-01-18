@@ -252,7 +252,6 @@ function formatLinksTutorials(arrItemsSheet) {
     return groupedLinks;
 }
 
-
 function formatFaqData(arrItemsSheet) {
     const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer]) => {
         if (!question || !answer) return [''];
