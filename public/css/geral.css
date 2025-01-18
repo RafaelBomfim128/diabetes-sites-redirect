@@ -352,6 +352,7 @@ button.menu-icon {
     top: 35px;
     right: 20px;
     cursor: pointer;
+    padding-left: 5px;
 }
 
 .share-icon img {
