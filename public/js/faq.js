@@ -51,8 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const button = targetFaq.querySelector('.faq-question');
             const answer = button.nextElementSibling;
 
-            button.classList.add('active'); // Adiciona a classe para indicar ativo
-            answer.style.maxHeight = answer.scrollHeight + "px"; // Expande a altura
+            button.classList.add('active');
+            answer.style.maxHeight = answer.scrollHeight + "px";
             answer.style.paddingTop = "10px";
             answer.style.paddingBottom = "10px";
         }
