@@ -69,3 +69,10 @@
     line-height: 1.6;
     transition: max-height 0.3s ease, padding 0.3s ease;
 }
+
+.lista-abbott {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
