@@ -27,12 +27,15 @@
             <h2>FAQ - Perguntas Frequentes ❓💡</h2>
             <div class="faq">
                 {{#each questionAnswer}}
-                <div class="faq-item">
+                <div class="faq-item" data-id="{{this.id}}">
                     <button class="faq-question">
                         {{this.question}}
                         <span class="arrow"></span>
                     </button>
                     <div class="faq-answer">
+                        <a href="#" target="_blank" class="share-icon whatsapp">
+                            <img id="whatsapp-icon" src="./img/whatsapp-icon.png" alt="Ícone de compartilhar no Whatsapp" />
+                        </a>
                         {{{this.answer}}}
                     </div>
                 </div>

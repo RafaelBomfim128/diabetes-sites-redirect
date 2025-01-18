@@ -70,9 +70,19 @@
     transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
+.faq-answer .share-icon.whatsapp {
+    float: right;
+}
+
 .lista-abbott {
     max-width: 100%;
     height: auto;
     display: block;
     margin: 0 auto;
+}
+
+.faq-item.highlighted {
+    outline: 2px solid var(--primary-color);
+    background-color: var(--faq-question-bg);
+    box-shadow: 0 4px 8px var(--container-shadow);
 }
