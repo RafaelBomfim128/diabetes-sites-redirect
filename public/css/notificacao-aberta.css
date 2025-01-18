@@ -31,16 +31,3 @@
     align-items: center;
     margin-bottom: 15px;
 }
-
-.share-icon img {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-}
-
-.share-icon .whatsapp {
-    position: absolute;
-    top: 35px;
-    right: 20px;
-    cursor: pointer;
-}

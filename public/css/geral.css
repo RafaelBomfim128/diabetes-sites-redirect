@@ -346,3 +346,16 @@ button.menu-icon {
 .share-btn:hover {
     opacity: 0.8;
 }
+
+.share-icon .whatsapp {
+    position: absolute;
+    top: 35px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.share-icon img {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}

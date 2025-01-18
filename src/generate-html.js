@@ -29,7 +29,7 @@ async function main() {
 
     const downloads = await readSheetData('Downloads!A:C');
     const tutorials = await readSheetData('Tutoriais!A:E');
-    const faq = await readSheetData('FAQ!A:B');
+    const faq = await readSheetData('FAQ!A:C');
     const notifications = await readSheetData('Avisos!A:D');
 
     const downloadsFormatted = formatLinksDownloads(downloads);
@@ -253,10 +253,10 @@ function formatLinksTutorials(arrItemsSheet) {
 }
 
 function formatFaqData(arrItemsSheet) {
-    const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer]) => {
-        if (!question || !answer) return [''];
+    const arrItemsSheetFormatted = arrItemsSheet.map(([question, answer, id]) => {
+        if (!question || !answer || !id) return [''];
         answer = answer.replace(/\n/g, '<br>');
-        return { question, answer };
+        return { question, answer, id };
     });
     return arrItemsSheetFormatted;
 }
