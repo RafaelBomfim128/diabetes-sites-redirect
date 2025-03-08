@@ -3,6 +3,7 @@ const path = require('path');
 const handlebars = require('handlebars');
 const { google } = require('googleapis');
 require('dotenv').config();
+const labels = require('./labels.json');
 
 const domainSite = 'https://tecnologiasnodiabetes.com.br/';
 const redirectsFile = path.join(__dirname, '..', 'public', '_redirects');
@@ -28,7 +29,7 @@ async function main() {
     const sheets = google.sheets({ version: 'v4', auth });
 
     const downloads = await readSheetData('Downloads!A:C');
-    const tutorials = await readSheetData('Tutoriais!A:E');
+    const tutorials = await readSheetData('Tutoriais!A:D');
     const faq = await readSheetData('FAQ!A:C');
     const notifications = await readSheetData('Avisos!A:D');
 
@@ -51,12 +52,12 @@ async function main() {
                 requestBody: { values: updatedLinks },
             });
 
-            console.log(`Planilha ${sheetName} atualizada com os novos links na coluna D!`);
+            console.log(`Planilha ${sheetName} atualizada com os novos links na coluna ${column}!`);
         };
 
-        //Atualização da coluna "Novo link" (D) nas abas Downloads e Tutoriais
+        //Atualização da coluna "Novo link" nas abas Downloads e Tutoriais
         await updateSheetLinks('Downloads', 'D', downloads);
-        await updateSheetLinks('Tutoriais', 'F', tutorials);
+        await updateSheetLinks('Tutoriais', 'E', tutorials);
     }
 
     //_redirects
@@ -66,49 +67,84 @@ async function main() {
 
     registerPartials();
 
-    //Geração de seções para o index.html
-    const downloadsSection = generateHtmlFromTemplate('template-downloads.html', {
-        links: downloadsFormatted,
-        isFullPage: false
-    });
-
-    const tutorialsSection = generateHtmlFromTemplate('template-tutoriais.html', {
-        links: tutorialsFormatted,
-        isFullPage: false
-    });
-
-    const faqSection = generateHtmlFromTemplate('template-faq.html', {
-        questionAnswer: faqFormatted,
-        isFullPage: false
-    });
-
     const mostRecentNotificationId = notificationsFormatted[0].id
 
     generateHtml('template-index.html', 'index.html', {
-        downloads: downloadsSection,
-        tutoriais: tutorialsSection,
-        faq: faqSection,
         apiBaseUrl,
         apiKey,
         mostRecentNotificationId,
-        isFullPage: true
     });
 
-    //Geração de páginas individuais
     generateHtml('template-downloads.html', 'downloads.html', {
         links: downloadsFormatted,
         apiBaseUrl,
         apiKey,
         mostRecentNotificationId,
-        isFullPage: true
     });
 
     generateHtml('template-tutoriais.html', 'tutoriais.html', {
-        links: tutorialsFormatted,
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId
+    });
+    
+    generateHtml('template-tutoriais-sensores.html', 'tutoriais-sensores.html', {
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId
+    });
+
+    const tutorialsTotal = [];
+    for (let category in tutorialsFormatted) {
+        tutorialsTotal.push(...tutorialsFormatted[category]);
+        generateHtml('template-tutoriais-item.html', `item-tutorial-${formatPath(category)}.html`, {
+            links: tutorialsFormatted[category],
+            title: category,
+            desc: labels.tutorials.find(item => item.category === category).description,
+            image: labels.tutorials.find(item => item.category === category).image,
+            apiBaseUrl,
+            apiKey,
+            mostRecentNotificationId,
+        });
+    }
+
+    generateHtml('template-tutoriais-item.html', 'item-tutorial-total.html', {
+        links: tutorialsTotal,
+        title: 'Todos os tutoriais',
+        desc: 'Todos os tutoriais disponíveis em uma única página.',
         apiBaseUrl,
         apiKey,
         mostRecentNotificationId,
-        isFullPage: true
+    });
+
+    generateHtml('template-tutoriais-item.html', `item-tutorial-libre.html`, {
+        links: tutorialsFormatted['Libre'],
+        title: 'Freestyle Libre 1 e 2',
+        desc: labels.tutorials.find(item => item.category === 'Libre').description,
+        image: labels.tutorials.find(item => item.category === 'Libre').image,
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+    });
+
+    generateHtml('template-tutoriais-item.html', `item-tutorial-aidex.html`, {
+        links: tutorialsFormatted['AiDEX'],
+        title: 'AiDEX',
+        desc: labels.tutorials.find(item => item.category === 'AiDEX').description,
+        image: labels.tutorials.find(item => item.category === 'AiDEX').image,
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+    });
+
+    generateHtml('template-tutoriais-item.html', `item-tutorial-sibionics.html`, {
+        links: tutorialsFormatted['Sibionics'],
+        title: 'Sibionics',
+        desc: labels.tutorials.find(item => item.category === 'Sibionics').description,
+        image: labels.tutorials.find(item => item.category === 'Sibionics').image,
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
     });
 
     generateHtml('template-faq.html', 'faq.html', {
@@ -116,7 +152,6 @@ async function main() {
         apiBaseUrl,
         apiKey,
         mostRecentNotificationId,
-        isFullPage: true
     });
 
     generateHtml('template-notificacoes.html', 'notificacoes.html', {
@@ -124,7 +159,6 @@ async function main() {
         apiBaseUrl,
         apiKey,
         mostRecentNotificationId,
-        isFullPage: true
     });
 
     notificationsFormatted.forEach((notification) => {
@@ -133,7 +167,6 @@ async function main() {
             apiBaseUrl,
             apiKey,
             mostRecentNotificationId,
-            isFullPage: true
         });
     });
 }
@@ -156,6 +189,8 @@ function formatPath(shortPath) {
     return shortPath
         .trim()
         .toLowerCase()
+        .normalize('NFD') // Normaliza a string
+        .replace(/[\u0300-\u036f]/g, '') // Remove os diacríticos (acentos)
         .replace(/\s+/g, '-')
         .replace(/[^a-z0-9\-]/g, '');
 }
@@ -194,26 +229,6 @@ function generateHtmlFromTemplate(templateFileName, data) {
     return template(data);
 }
 
-function groupLinksByCategory(links, order) {
-    const grouped = links.reduce((accumulator, link) => {
-      if (!accumulator[link.category]) {
-        accumulator[link.category] = [];
-      }
-      accumulator[link.category].push(link);
-      return accumulator;
-    }, {});
-  
-    const orderedGrouped = {};
-    order.forEach(category => {
-      if (grouped[category]) {
-        orderedGrouped[category] = grouped[category];
-        delete grouped[category];
-      }
-    });
-  
-    return { ...orderedGrouped, ...grouped };
-}
-
 function formatLinksDownloads(arrItemsSheet) {
     const arrItemsSheetFormatted = arrItemsSheet.map(([title, shortPath, fullUrl, tag]) => {
         if (!title || !shortPath || !fullUrl) return [''];
@@ -222,34 +237,26 @@ function formatLinksDownloads(arrItemsSheet) {
     return arrItemsSheetFormatted;
 }
 
-const orderTutorials = ['Ponto de partida', 'xDrip', 'Android APS', "Sensores", 'Nightscout', 'Relógios', 'Bombas', 'Outros'];
 function formatLinksTutorials(arrItemsSheet) {
-    const categoryIcons = {
-        'Ponto de partida': './img/icons/icon-ponto-partida.png',
-        'xDrip': './img/icons/icon-xdrip.png',
-        'Android APS': './img/icons/icon-android-aps.png',
-        'Sensores': './img/icons/icon-sensores.png',
-        'Nightscout': './img/icons/icon-nightscout.png',
-        'Relógios': './img/icons/icon-relogios.png',
-        'Bombas': './img/icons/icon-bombas.png',
-        'Outros': './img/icons/icon-tutorial-default.png',
-    };
+    const formattedObj = {};
 
-    const objItemsSheet = arrItemsSheet.map(([title, shortPath, fullUrl, category, tag]) => {
-        if (!title || !shortPath || !fullUrl || !category || !tag) return [''];
-        return { 
-            title, 
-            shortPath, 
-            fullUrl, 
-            category, 
-            tag, 
-            icon: categoryIcons[category] || './img/icons/icon-tutorial-default.png', // Define um ícone padrão se a categoria não tiver um específico
-            newLink: `${domainSite}${formatPath(shortPath)}` 
-        };
+    arrItemsSheet.forEach(([title, shortPath, fullUrl, category]) => {
+        if (!title || !shortPath || !fullUrl || !category) return;
+        
+        if (!formattedObj[category]) {
+            formattedObj[category] = [];
+        }
+        
+        formattedObj[category].push({
+            title,
+            shortPath,
+            fullUrl,
+            category,
+            newLink: `${domainSite}${formatPath(shortPath)}`
+        });
     });
 
-    const groupedLinks = groupLinksByCategory(objItemsSheet, orderTutorials);
-    return groupedLinks;
+    return formattedObj;
 }
 
 function formatFaqData(arrItemsSheet) {
