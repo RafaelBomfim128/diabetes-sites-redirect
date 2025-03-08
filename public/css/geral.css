@@ -16,10 +16,14 @@ body {
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 5px var(--container-shadow);
-    max-width: 800px;
+    max-width: 1200px;
     width: 100%;
     padding-left: 30px;
     position: relative;
+}
+
+.container section {
+    padding-top: 18px;
 }
 
 .container section h2 {
@@ -27,7 +31,8 @@ body {
     top: 149px;
 }
 
-h1, h2 {
+h1,
+h2 {
     color: var(--primary-color);
     text-align: center;
 }
@@ -41,6 +46,9 @@ ul {
     background-image: var(--button-bg);
     background-color: #5bb5ff;
     border-radius: 20px;
+    font-size: 13px;
+    font-family: sans-serif;
+    line-height: normal;
 }
 
 .container ul li {
@@ -49,13 +57,13 @@ ul {
     padding-right: 4px;
 }
 
-.container section ul{
+.container section ul {
     margin-left: -10px;
     margin-right: -10px;
 }
 
 .category-title,
-#content-tutorials ul{
+#content-tutorials ul {
     margin-left: -15px;
     margin-right: -10px;
 }
@@ -109,6 +117,11 @@ button:hover {
     background-color: var(--button-hover-bg);
 }
 
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
 .category {
     margin-bottom: 20px;
 }
@@ -138,15 +151,20 @@ button:hover {
 }
 
 #category-Sensores .category-icon,
-#category-Bombas .category-icon {
+#category-Bombas .category-icon,
+.category-icon.sensores,
+.category-icon.bombas {
     width: 150px;
 }
 
-#category-Nightscout .category-icon {
+#category-Nightscout .category-icon,
+.category-icon.nightscout {
     width: 50px;
 }
 
-#category-Relógios .category-icon {
+#category-Relógios .category-icon,
+.category-icon.relogios,
+.category-icon.libre {
     width: 100px;
 }
 
@@ -206,11 +224,10 @@ button:hover {
 }
 
 footer {
-    margin-top: auto;
     text-align: center;
-    padding: 10px;
-    font-size: smaller;
-    color: #777;
+    margin-top: 50px;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
 }
 
 #searchBar {
@@ -299,6 +316,17 @@ button.menu-icon {
     background-color: rgba(0, 120, 215, 0.1);
 }
 
+.return-index {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--primary-color);
+    cursor: pointer;
+    position: relative;
+    top: 25px;
+    bottom: 10px;
+}
+
 .notification-bell {
     position: absolute;
     top: 35px;
@@ -312,7 +340,7 @@ button.menu-icon {
 }
 
 .share-section {
-    margin-top: 20px;
+    margin-top: 50px;
     text-align: center;
 }
 
@@ -338,10 +366,21 @@ button.menu-icon {
     transition: background-color 0.3s ease;
 }
 
-.share-btn.fb { background-color: #3b5998; }
-.share-btn.twitter { background-color: #1da1f2; }
-.share-btn.whatsapp { background-color: #25d366; }
-.share-btn.linkedin { background-color: #0077b5; }
+.share-btn.fb {
+    background-color: #3b5998;
+}
+
+.share-btn.twitter {
+    background-color: #1da1f2;
+}
+
+.share-btn.whatsapp {
+    background-color: #25d366;
+}
+
+.share-btn.linkedin {
+    background-color: #0077b5;
+}
 
 .share-btn:hover {
     opacity: 0.8;
@@ -356,7 +395,77 @@ button.menu-icon {
 
 .share-icon img {
     width: 40px;
-    height: 40px;
+    height: 30px;
     cursor: pointer;
     padding-left: 10px;
+}
+
+.hero {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.container .hero {
+    background-image: linear-gradient(to right, #24c6dc 0%, #514a9d 100%);
+    margin-top: 25px;
+}
+
+.hero.tutoriais {
+    background-image:linear-gradient(to right, #43c6ac 0%, #191654 100%);
+}
+
+.hero.downloads {
+    background-image:linear-gradient(to right, #314755 0%, #26a0da 100%);
+    margin-bottom: 0px;
+}
+
+.hero.faq {
+    background-image:linear-gradient(to right, #34e89e 0%, #0f3443 100%);
+    margin-bottom: 0px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-top: 15px;
+    color: white;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.container .col-md-4 .card {
+    background-color: rgba(236, 240, 241, 0.57);
+}
+
+.highlight {
+    animation: highlightAnimation 3s ease-in-out;
+    background-color: rgba(255, 255, 0, 0.3); /* Amarelo claro */
+}
+
+@keyframes highlightAnimation {
+    0% {
+        background-color: rgba(255, 255, 0, 0.3);
+    }
+    100% {
+        background-color: transparent;
+    }
 }

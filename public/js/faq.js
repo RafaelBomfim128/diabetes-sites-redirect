@@ -3,7 +3,7 @@ document.querySelectorAll('.faq-question').forEach(button => {
         const answer = button.nextElementSibling;
         button.classList.toggle('active');
         if (button.classList.contains('active')) {
-            answer.style.maxHeight = answer.scrollHeight + "px";
+            answer.style.maxHeight = answer.scrollHeight + 10 + "px";
             answer.style.paddingTop = "10px";
             answer.style.paddingBottom = "10px";
         } else {

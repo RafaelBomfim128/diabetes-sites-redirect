@@ -7,7 +7,7 @@
     <title>Tecnologias no Diabetes 💉🩸💻📱</title>
     <link rel="icon" type="image/png" href="./img/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="./img/favicon.svg" />
-    <link rel="shortcut icon" href="./img/favicon.ico" />
+    <link rel="shortcut ícon" href="./img/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="./img/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Tecnologias no Diabetes" />
     <link rel="manifest" href="./img/site.webmanifest" />
@@ -18,37 +18,40 @@
 
 <body>
     {{> view-counter }}
-    <div class="container mt-5"><br>
+    <div class="container"><br>
         {{> menu }}
+        <a class="return-index" href="tutoriais.html">Retornar</a>
         {{> notificacoes }}
 
-        <div class="hero">
-            <h1>Tecnologias no Diabetes 💉🩸💻📱</h1>
-            <p>Explore aplicativos e tutoriais para facilitar o gerenciamento do diabetes utilizando tecnologias</p>
-            <a href="#recursos" class="btn btn-light btn-lg mt-3">Comece Agora</a>
+        <div class="hero tutoriais">
+            <h1>Sensores</h1>
+            <p>Escolha um sensor para encontrar os tutoriais que temos disponíveis</p>
         </div>
 
         <!-- Seção de Recursos -->
         <div id='recursos' class="row g-4">
             <div class="col-md-4">
                 <div class="card text-center p-3">
-                    <h5 class="card-title">Aplicativos 💾📂</h5>
-                    <p class="card-text">Encontre aplicativos e ferramentas úteis para baixar.</p>
-                    <a href="downloads.html" class="btn btn-primary">Acessar</a>
+                    <h5 class="card-title">Freestyle Libre 1 e 2</h5>
+                    <img src="img/icons/icon-libre.png" alt="Ponto de partida ícone" class="tutorial-menu libre category-icon mx-auto" />
+                    <p class="card-text">Tutoriais sobre Freestyle Libre 1 e 2</p>
+                    <a href="item-tutorial-libre.html" class="btn btn-info">Acessar</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card text-center p-3">
-                    <h5 class="card-title">Tutoriais - Passo a passo 📚🎥🛠️</h5>
-                    <p class="card-text">Aprenda com vídeos e documentos detalhados para usar as tecnologias.</p>
-                    <a href="tutoriais.html" class="btn btn-success">Aprender</a>
+                    <h5 class="card-title">AiDEX</h5>
+                    <img src="img/icons/icon-aidex.png" alt="xDrip ícone" class="tutorial-menu category-icon mx-auto" />
+                    <p class="card-text">Tutoriais sobre AiDEX</p>
+                    <a href="item-tutorial-aidex.html" class="btn btn-info">Acessar</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card text-center p-3">
-                    <h5 class="card-title">FAQ ❓💡</h5>
-                    <p class="card-text">Encontre perguntas e respostas sobre o uso das tecnologias.</p>
-                    <a href="faq.html" class="btn btn-info">Explorar</a>
+                    <h5 class="card-title">Sibionics</h5>
+                    <img src="img/icons/icon-sibionics.png" alt="xDrip ícone" class="tutorial-menu category-icon mx-auto" />
+                    <p class="card-text">Tutoriais sobre Sibionics</p>
+                    <a href="item-tutorial-sibionics.html" class="btn btn-info">Acessar</a>
                 </div>
             </div>
         </div>
@@ -64,23 +67,5 @@
         };
     </script>
     <script src="./js/geral.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const buttons = document.querySelector(".hero a[href='#recursos']");
-            const resources = document.querySelectorAll("#recursos .col-md-4");
-    
-            buttons.addEventListener("click", function (event) {    
-                resources.forEach(card => {
-                    card.classList.add("highlight");
-                });
-    
-                setTimeout(() => {
-                    resources.forEach(card => {
-                        card.classList.remove("highlight");
-                    });
-                }, 2000);
-            });
-        });
-    </script>
 </body>
 </html>
