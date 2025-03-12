@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const answer = button.nextElementSibling;
 
             button.classList.add('active');
-            answer.style.maxHeight = answer.scrollHeight + "px";
+            answer.style.maxHeight = answer.scrollHeight + 10 + "px";
             answer.style.paddingTop = "10px";
             answer.style.paddingBottom = "10px";
         }
