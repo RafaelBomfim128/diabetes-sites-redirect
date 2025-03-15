@@ -316,7 +316,7 @@ button:disabled {
 
 .ranking-table th:nth-child(5),
 .ranking-table td:nth-child(5) {
-    width: 10px;
+    width: 65px;
     text-align: center;
 }
 
