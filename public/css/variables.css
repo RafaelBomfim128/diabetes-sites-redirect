@@ -1,15 +1,18 @@
 :root {
-    --primary-color: #0078d7;
-    --secondary-color: #505050;
-    --background-color: #f4f4f4;
-    --text-color: #333;
-    --container-bg: #fff;
-    --container-shadow: rgba(0, 0, 0, 0.1);
-    --button-bg: linear-gradient(to right, #37a5ff 0%, #0078d7 100%);
-    --button-hover-bg: #0056b3;
-    --light-bg: rgba(41,128,185,0.05);
-    --border-color: #ddd;
-    --faq-question-bg: rgba(0, 120, 215, 0.1);
-    --faq-question-hover-bg: rgba(0, 120, 215, 0.4);
-    --faq-answer-bg: #f9f9f9;
+    --primary-color: #0078d7; /* Azul principal */
+    --secondary-color: #505050; /* Cinza secundário */
+    --background-color: #f4f4f4; /* Fundo padrão */
+    --text-color: #333; /* Cor do texto */
+    --container-bg: #fff; /* Fundo dos contêineres */
+    --container-shadow: rgba(0, 0, 0, 0.1); /* Sombra leve */
+    --button-bg: linear-gradient(to right, #37a5ff 0%, #0078d7 100%); /* Fundo de botões */
+    --button-hover-bg: #0056b3; /* Fundo ao passar o mouse */
+    --light-bg: rgba(41, 128, 185, 0.05); /* Azul claro */
+    --border-color: #ddd; /* Cor das bordas */
+    --faq-question-bg: rgba(0, 120, 215, 0.1); /* Fundo das perguntas de FAQ */
+    --faq-question-hover-bg: rgba(0, 120, 215, 0.4); /* Fundo ao passar o mouse nas perguntas */
+    --faq-answer-bg: #f9f9f9; /* Fundo das respostas de FAQ */
+    --success-color: #28a745; /* Verde para respostas corretas */
+    --error-color: #dc3545; /* Vermelho para respostas incorretas */
+    --accent-color: #ffc107; /* Amarelo para bordas de opções selecionadas */
 }

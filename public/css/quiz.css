@@ -1,0 +1,428 @@
+@import url('variables.css');
+
+#quiz-container {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--container-shadow);
+}
+
+.quiz-section {
+    margin-bottom: 20px;
+}
+
+.error-section {
+    background-color: #ffdddd;
+    border: 1px solid #ff0000;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+}
+.error-section h3 {
+    color: #d80000;
+}
+
+#feedback-p {
+    margin-bottom: 30px;
+}
+
+#send-ranking-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#send-ranking-button:hover {
+    background-color: var(--button-hover-bg);
+}
+
+#quiz-questions ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+#quiz-questions li {
+    background-color: var(--faq-question-bg);
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+    min-height: 40px;
+    justify-content: center;
+}
+
+.quiz-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+#question-numbers {
+    margin-left: auto;
+    display: flex;
+}
+
+@media (hover: hover) {
+    #quiz-questions li:hover {
+        background-color: var(--faq-question-hover-bg);
+    }
+}
+
+@media (hover: none) {
+    #quiz-questions li:hover {
+        background-color: var(--faq-question-bg);
+    }
+}
+
+.wrapper-question-data {
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.container-question-data {
+    background-color: #ecf0f1;
+    color: var(--text-color);
+    padding: 3px 7px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px var(--container-shadow);
+    font-weight: bold;
+    display: inline-block;
+    font-size: 14px;
+    z-index: 2;
+    max-width: fit-content;
+    margin-right: -15px;
+}
+
+.container-question-data.easy {
+    background-color: #BFE1F6;
+    color: #0A53A8;
+}
+
+.container-question-data.medium {
+    background-color: #FFE5A0;
+    color: #473821;
+}
+
+.container-question-data.hard {
+    background-color: #FFC8AA;
+    color: #753800;
+}
+
+.container-question-data.very-hard {
+    background-color: #B10202;
+    color: #FFCFC9;
+}
+
+.container-question-data.correct {
+    background-color: #28a745;
+    color: white;
+}
+
+.container-question-data.incorrect {
+    background-color: #dc3545;
+    color: white;
+}
+
+#quiz-options li.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border: 4px solid var(--accent-color);
+    border-radius: 5px;
+}
+
+#quiz-options li.correct:not(.selected) {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+}
+
+#quiz-options li.incorrect {
+    background-color: var(--error-color);
+    color: white;
+}
+
+#quiz-questions li.correct {
+    background-color: #28a745;
+    color: white;
+}
+
+#quiz-questions li.incorrect {
+    background-color: #dc3545;
+    color: white;
+}
+
+.quiz-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+#quiz-start-button {
+    font-size: 16px;
+    position: relative;
+    top: 12px;
+}
+
+.quiz-actions button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.feedback-text {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: justify;
+}
+
+.feedback-text.correct {
+    color: #28a745;
+}
+
+.feedback-text.incorrect {
+    color: #dc3545;
+}
+
+.feedback-highlight.correct {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.feedback-highlight.incorrect {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.feedback-normal {
+    color: var(--text-color);
+    font-weight: normal;
+}
+
+.feedback-normal strong {
+    font-weight: bold;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Ranking */
+/* Container do ranking */
+#ranking-section {
+    margin: 20px auto;
+    max-width: 580px;
+    background-color: var(--container-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px var(--container-shadow);
+}
+
+/* Estilo das abas */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    gap: 5px;
+}
+
+.tab-button {
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.tab-button.active {
+    background: var(--button-hover-bg);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.tab-button:hover {
+    background: var(--button-hover-bg);
+}
+
+.tab-content {
+    width: 100%;
+    padding: 5px 0;
+}
+
+/* Tabela de ranking */
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.ranking-table th,
+.ranking-table td {
+    padding: 5px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ranking-table th {
+    background-color: var(--light-bg);
+    font-size: 0.8em;
+}
+
+.ranking-table td:first-child {
+    text-align: center;
+    font-weight: bold;
+    width: 30px;
+}
+
+.ranking-table th:nth-child(1),
+.ranking-table td:nth-child(1) {
+    width: 10px;
+    text-align: center;
+}
+
+.ranking-table th:nth-child(2),
+.ranking-table td:nth-child(2) {
+    width: auto;
+    word-break: break-word;
+    max-width: 200px;
+}
+
+.ranking-table th:nth-child(3),
+.ranking-table td:nth-child(3),
+.ranking-table th:nth-child(4),
+.ranking-table td:nth-child(4) {
+    width: 10px;
+    text-align: center;
+}
+
+.ranking-table th:nth-child(5),
+.ranking-table td:nth-child(5) {
+    width: 10px;
+    text-align: center;
+}
+
+/* Overlay que cobre o ranking enquanto carrega */
+.loader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    display: none;
+}
+
+/* Animação do loader (círculo girando) */
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top-color: #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Animação de rotação */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Ranking um pouco opaco quando o loader estiver visível */
+.ranking-loading {
+    opacity: 0.5;
+    pointer-events: none; /* Impede interações enquanto carrega */
+}
+
+/* Estilos do Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    margin-bottom: 10px;
+}
+
+.modal-content input {
+    width: 90%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#submit-name {
+    background: #28a745;
+    color: white;
+}
+
+#cancel-modal {
+    background: #dc3545;
+    color: white;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}

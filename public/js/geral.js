@@ -157,27 +157,33 @@ function stopAutoUpdateViews() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    Promise.all([
-        getDailyViews(),
-        getMonthlyViews(),
-        getTotalViews(),
-    ]).then(() => {
-        incrementViews();
-        startAutoUpdateViews();
-    });
+    const isLocal = window.location.protocol === 'file:' || 
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1';
 
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            setTimeout(() => {
-                getDailyViews();
-                getMonthlyViews();
-                getTotalViews();
-            }, 1000);
+    if (!isLocal) {
+        Promise.all([
+            getDailyViews(),
+            getMonthlyViews(),
+            getTotalViews(),
+        ]).then(() => {
+            incrementViews();
             startAutoUpdateViews();
-        } else {
-            stopAutoUpdateViews();
-        }
-    });
+        });
+    
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                setTimeout(() => {
+                    getDailyViews();
+                    getMonthlyViews();
+                    getTotalViews();
+                }, 1000);
+                startAutoUpdateViews();
+            } else {
+                stopAutoUpdateViews();
+            }
+        });
+    }
 });
 
 document.addEventListener("DOMContentLoaded", () => {

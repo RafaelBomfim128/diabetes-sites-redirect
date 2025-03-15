@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnologias no Diabetes - Quiz</title>
+    <link rel="icon" type="image/png" href="./img/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./img/favicon.svg" />
+    <link rel="shortcut icon" href="./img/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Tecnologias no Diabetes" />
+    <link rel="manifest" href="./img/site.webmanifest" />
+    <link rel="stylesheet" href="./css/geral.css">
+    <link rel="stylesheet" href="./css/quiz.css">
+</head>
+
+<body>
+    {{> view-counter }}
+    <div class="container"><br>
+        {{> menu }}
+        <a class="return-index" href="index.html">Retornar</a>
+        {{> notificacoes }}
+
+        <section>
+            <h2 class="category-title" onclick="toggleCategory(this, 'quiz')">Quiz de Diabetes 🧠🏆
+                <span class="arrow"></span>
+            </h2>
+            <p>📅 Novas questões são adicionadas periodicamente! Recomendamos que você refaça o Quiz regularmente para
+                aprender cada vez mais! 📖😄</p>
+            <div class="category-content" id="content-quiz">
+                <div id="quiz-container">
+                    <div class="quiz-header">
+                        <span id="category">Diabetes</span>
+                        <div id="question-numbers">
+                            <span id="current-question">0</span>/<span id="total-questions">0</span>
+                        </div>
+                    </div>
+
+                    <div id="quiz-start" class="quiz-section">
+                        <h3>Teste seus conhecimentos sobre diabetes</h3>
+                        <p>Responda perguntas rápidas e aprenda mais sobre como cuidar melhor da sua saúde.</p>
+                        <button id="quiz-start-button">Iniciar Quiz</button>
+                    </div>
+
+                    <div id="quiz-questions" class="quiz-section" style="display: none;">
+                        <div class="wrapper-question-data">
+                            <div class="container-question-data">
+                                <span>Pontuação atual: <span id="total-score">0</span></span>
+                            </div>
+                        </div>
+                        <div class="wrapper-question-data">
+                            <div class="container-question-data">
+                                <span>Dificuldade: <span id="question-difficulty"></span></span>
+                            </div>
+                            <div id="container-score-question" class="container-question-data">
+                                <span id="text-score-question">Valendo <span id="score-question">0</span> pontos</span>
+                                <span id="result-score-question" style="display: none;"></span>
+                            </div>
+                        </div>
+                        <p id="quiz-question-text"></p>
+                        <ul id="quiz-options"></ul>
+                        <p id="quiz-feedback" class="feedback-text" style="display: none;"></p>
+                        <div class="quiz-actions">
+                            <button id="submit-answer" disabled>Enviar Resposta</button>
+                            <button id="next-question" style="display: none;">Próxima
+                                Questão</button>
+                        </div>
+                    </div>
+
+                    <div id="quiz-results" class="quiz-section" style="display: none;">
+                        <h3>Parabéns! Você concluiu o quiz 🎉</h3>
+                        <p>Questões acertadas: <span id="correct-count"></span>/<span id="quiz-total-questions"></span>
+                        </p>
+                        <p>Pontuação: <span id="quiz-score"></span>/100</p>
+                        <p id="feedback-p">Feedback: <span id="quiz-results-feedback"></span></p>
+                        <div>
+                            <button id="send-ranking-button">Enviar pontuação para o ranking 📊</button>
+                        </div>
+                        <button id="share-result">Compartilhar no WhatsApp</button>
+                        <button id="restart-quiz">Tentar Novamente</button>
+                    </div>
+                </div>
+                <div id="quiz-error" class="quiz-section error-section" style="display: none;">
+                    <h3>Ops! Algo deu errado 😞</h3>
+                    <p id="error-message">Não foi possível carregar o quiz. Entre em contato com o administrador do
+                        site.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ranking-section">
+            <h2 class="category-title">Ranking</h2>
+            <div id="ranking-loader" class="loader-overlay">
+                <div class="loader"></div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-button active" data-tab="daily">Ranking Diário</button>
+                <button class="tab-button" data-tab="general">Ranking Mensal</button>
+            </div>
+            <div class="tab-content" id="daily">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Pontos</th>
+                            <th>Acertos</th>
+                            <th>Data e Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="daily-ranking">
+                        <!-- Linhas inseridas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-content" id="general" style="display: none;">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Pontos</th>
+                            <th>Acertos</th>
+                            <th>Data e Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthly-ranking">
+                        <!-- Linhas inseridas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <div id="ranking-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Digite seu nome para entrar no ranking</h3>
+            <input type="text" id="player-name" placeholder="Seu nome" maxlength="20">
+            <p id="name-error" class="error-message" style="display: none;">O nome deve ter entre 3 e 20 caracteres.</p>
+            <div class="modal-actions">
+                <button id="submit-name">Enviar</button>
+                <button id="cancel-modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    {{> social-media }}
+    {{> footer }}
+    <script>
+        window.env = {
+            API_BASE_URL: "{{apiBaseUrl}}",
+            API_KEY: "{{apiKey}}",
+            MOST_RECENT_NOTIFICATION_ID: "{{mostRecentNotificationId}}"
+        };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="./js/geral.js"></script>
+    <script src="./js/quiz.js" type="module"></script>
+</body>
+
+</html>
