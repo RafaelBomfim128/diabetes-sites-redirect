@@ -7,6 +7,7 @@
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 2px 5px var(--container-shadow);
+    user-select: none;
 }
 
 .quiz-section {
