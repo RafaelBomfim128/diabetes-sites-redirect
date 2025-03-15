@@ -304,8 +304,6 @@ function formatQuizData(arrItemsSheet) {
             .map(word => word.trim().toUpperCase())
             .filter(word => word !== '');
 
-        exportToFile(Object.entries(alternativesObj), 'alternatives.json')
-
         const filteredAlternatives = Object.entries(alternativesObj)
             .filter(([key, value]) => value != null && value.trim() !== '')
             .map(([key, value]) => ({ key, value, isCorrect: corrects.includes(key) }));
@@ -331,8 +329,6 @@ function formatQuizData(arrItemsSheet) {
 
     fs.writeFileSync(path.join(__dirname, '..', 'public', 'encrypted-questions.json'), JSON.stringify({ data: encryptedQuestions }));
     console.log('As questões foram criptografadas e salvas.');
-
-    exportToFile(arrItemsSheetFormatted, 'quiz.json')
 }
 
 function encryptData(data, secretKey) {
@@ -340,5 +336,11 @@ function encryptData(data, secretKey) {
 }
 
 function exportToFile(data, fileName) {
-    fs.writeFileSync(path.join(__dirname, '..', 'temp', fileName), JSON.stringify(data, null, 2));
+    const dirPath = path.join(__dirname, '..', 'temp');
+
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+    }
+
+    fs.writeFileSync(path.join(dirPath, fileName), JSON.stringify(data, null, 2));
 }
