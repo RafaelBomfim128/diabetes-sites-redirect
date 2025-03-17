@@ -406,8 +406,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function shareResult() {
+        const currentUrl = encodeURIComponent(window.location.href);
         const message = `Eu acertei ${correctCount}/${totalQuestionsCount} no Quiz sobre Diabetes! Faça o teste também!`;
-        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}%0A%0A${currentUrl}`;
         window.open(whatsappUrl, '_blank');
     }
 
@@ -531,6 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.style.display = "flex";
         playerNameInput.value = "";
         nameError.style.display = "none";
+        submitNameButton.disabled = false;
     });
 
     cancelModalButton.addEventListener("click", function () {
@@ -544,6 +546,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nameError.style.display = "block";
             return;
         }
+        submitNameButton.disabled = true;
 
         const sessionID = sessionStorage.getItem("sessionID");
         const signature = sessionStorage.getItem("signature");
