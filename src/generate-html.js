@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const handlebars = require('handlebars');
+const CryptoJS = require('crypto-js');
 const { google } = require('googleapis');
 require('dotenv').config();
 const labels = require('./labels.json');
@@ -32,11 +33,13 @@ async function main() {
     const tutorials = await readSheetData('Tutoriais!A:D');
     const faq = await readSheetData('FAQ!A:C');
     const notifications = await readSheetData('Avisos!A:D');
+    const quiz = await readSheetData('Quiz!A:J');
 
     const downloadsFormatted = formatLinksDownloads(downloads);
     const tutorialsFormatted = formatLinksTutorials(tutorials);
     const faqFormatted = formatFaqData(faq);
     const notificationsFormatted = formatNotificationsData(notifications);
+    formatQuizData(quiz);
 
     if (NODE_ENV !== 'read_only') {
         const updateSheetLinks = async (sheetName, column, links) => {
@@ -169,6 +172,13 @@ async function main() {
             mostRecentNotificationId,
         });
     });
+
+    generateHtml('template-quiz.html', 'quiz.html', {
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+        isFullPage: true
+    });
 }
 
 main().catch(error => {
@@ -276,4 +286,61 @@ function formatNotificationsData(arrItemsSheet) {
         return { title, content, date, id };
     });
     return arrItemsSheetFormatted;
+}
+
+function formatQuizData(arrItemsSheet) {
+    const arrItemsSheetFormatted = arrItemsSheet.map(([question, alternativeA, alternativeB, alternativeC, alternativeD, alternativeCorrect, explanation, difficulty, category, id]) => {
+        if (!question || !alternativeCorrect || !explanation || !id) return null;
+
+        const alternativesObj = {
+            A: alternativeA,
+            B: alternativeB,
+            C: alternativeC,
+            D: alternativeD
+        };
+
+        const corrects = alternativeCorrect.replace(/ e /g, ',')
+            .split(/[ ,]+/)
+            .map(word => word.trim().toUpperCase())
+            .filter(word => word !== '');
+
+        const filteredAlternatives = Object.entries(alternativesObj)
+            .filter(([key, value]) => value != null && value.trim() !== '')
+            .map(([key, value]) => ({ key, value, isCorrect: corrects.includes(key) }));
+
+        if (filteredAlternatives.length < 2) return null;
+
+        return {
+            question,
+            alternatives: filteredAlternatives,
+            explanation,
+            corrects,
+            difficulty,
+            category,
+            id
+        }
+
+    }).filter(item => item !== null);
+
+    //Dado não confidencial
+    const key = 'DCC52255D8D31EE38548E7F5B4BB4ABC';
+
+    const encryptedQuestions = encryptData(arrItemsSheetFormatted, key);
+
+    fs.writeFileSync(path.join(__dirname, '..', 'public', 'encrypted-questions.json'), JSON.stringify({ data: encryptedQuestions }));
+    console.log('As questões foram criptografadas e salvas.');
+}
+
+function encryptData(data, secretKey) {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+}
+
+function exportToFile(data, fileName) {
+    const dirPath = path.join(__dirname, '..', 'temp');
+
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+    }
+
+    fs.writeFileSync(path.join(dirPath, fileName), JSON.stringify(data, null, 2));
 }
