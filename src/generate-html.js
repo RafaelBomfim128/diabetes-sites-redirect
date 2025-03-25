@@ -5,6 +5,7 @@ const CryptoJS = require('crypto-js');
 const { google } = require('googleapis');
 require('dotenv').config();
 const labels = require('./labels.json');
+const { generateAllThumbnails } = require('./generate-thumbnail');
 
 const domainSite = 'https://tecnologiasnodiabetes.com.br/';
 const redirectsFile = path.join(__dirname, '..', 'public', '_redirects');
@@ -177,7 +178,52 @@ async function main() {
         apiBaseUrl,
         apiKey,
         mostRecentNotificationId,
-        isFullPage: true
+    });
+
+    const pdfDataToHtml = await generateAllThumbnails();
+
+    const pdfCategoriesPages = [];
+    const allPdfs = [];
+    for (let category in pdfDataToHtml) {
+        pdfCategoriesPages.push({
+            title: labels.usefulContents.find(item => item.category === category).category,
+            icon: labels.usefulContents.find(item => item.category === category).image,
+            desc: labels.usefulContents.find(item => item.category === category).description,
+            url: `${formatPath(category)}.html`
+        })
+        allPdfs.push(...pdfDataToHtml[category]);
+
+        generateHtml('template-conteudos-uteis.html', `${formatPath(category)}.html`, {
+            apiBaseUrl,
+            apiKey,
+            mostRecentNotificationId,
+            pdfs: pdfDataToHtml[category],
+            title: labels.usefulContents.find(item => item.category === category).category,
+            description: labels.usefulContents.find(item => item.category === category).description
+        });
+    }
+
+    generateHtml('template-conteudos-uteis.html', 'conteudos-uteis-total.html', {
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+        pdfs: allPdfs,
+        title: 'Todos os conteúdos úteis',
+        description: 'Todos os conteúdos úteis disponíveis em uma única página'
+    });
+
+    pdfCategoriesPages.push({
+        title: labels.usefulContents.find(item => item.category === 'Ver tudo').category,
+        icon: undefined,
+        desc: labels.usefulContents.find(item => item.category === 'Ver tudo').description,
+        url: 'conteudos-uteis-total.html'
+    })
+
+    generateHtml('template-conteudos-uteis-categorias.html', 'conteudos-uteis-categorias.html', {
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+        categories: pdfCategoriesPages
     });
 }
 

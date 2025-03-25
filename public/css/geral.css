@@ -37,6 +37,16 @@ h2 {
     text-align: center;
 }
 
+.disclaimer-title {
+    text-align: center;
+}
+
+.disclaimer-body {
+    text-align: justify;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 ul {
     list-style: none;
     padding: 0;
@@ -144,28 +154,15 @@ button:hover {
 }
 
 .category-icon {
-    width: 72px;
-    height: 72px;
+    width: 100px;
+    height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: contain;
     margin-right: 8px;
     vertical-align: middle;
-}
-
-#category-Sensores .category-icon,
-#category-Bombas .category-icon,
-.category-icon.sensores,
-.category-icon.bombas {
-    width: 150px;
-}
-
-#category-Nightscout .category-icon,
-.category-icon.nightscout {
-    width: 50px;
-}
-
-#category-Relógios .category-icon,
-.category-icon.relogios,
-.category-icon.libre {
-    width: 100px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
 }
 
 .arrow {
@@ -455,6 +452,22 @@ button.menu-icon {
 .container .col-md-4 .card {
     background-color: rgba(236, 240, 241, 0.57);
 }
+
+.pdf-thumbnail {
+    width: 100%; /* Ajusta a largura da imagem para ocupar todo o card */
+    height: auto; /* Define uma altura fixa para a imagem */
+    max-height: 200px;
+    object-fit: contain; /* Faz a imagem se ajustar ao tamanho mantendo proporções e preenchendo o espaço */
+    border-radius: 5px; /* Adiciona bordas arredondadas à imagem para combinar com o card */
+}
+
+.no-padding {
+    padding: 0;
+}
+
+#recursos .card .card-title{
+    text-decoration:none;
+   }
 
 .highlight {
     animation: highlightAnimation 3s ease-in-out;
