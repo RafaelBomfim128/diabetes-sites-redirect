@@ -1,79 +1,45 @@
-name: Gerar Links e Deploy
+name: Gerar Links
 
 on:
   workflow_dispatch:
 
 jobs:
-  # --- JOB 1: Build com Node 22 ---
-  build:
+  generate_links:
     runs-on: ubuntu-latest
-    outputs: # Opcional, mas bom para clareza
-      output_dir: public # Define o nome do diretório de saída
 
     steps:
     - name: Check out o código
-      uses: actions/checkout@v4 # Use a versão mais recente do checkout
+      uses: actions/checkout@v3
 
-    - name: Configurar Node.js v22
-      uses: actions/setup-node@v4 # Use a versão mais recente do setup-node
+    - name: Configurar Node.js
+      uses: actions/setup-node@v3
       with:
-        node-version: '22'
-        cache: 'npm' # Adiciona cache do npm para acelerar builds futuros
+        node-version: '20'
 
-    - name: Instalar dependências (incluindo pdf-to-png-converter)
-      run: npm ci # 'npm ci' é geralmente preferível em CI do que 'npm install'
+    - name: Instalar dependências
+      run: npm install
 
-    # Não precisa instalar netlify-cli globalmente aqui
-    # - name: Instalar Netlify CLI
-    #  run: npm install -g netlify-cli
+    - name: Instalar Netlify CLI
+      run: npm install -g netlify-cli
 
-    - name: Definir variáveis de ambiente para build
-      run: echo "NODE_ENV=production" >> $GITHUB_ENV
+    - name: Definir variáveis de ambiente
+      run: echo "NODE_ENV=production" >> $GITHUB_ENV  # Definir NODE_ENV como 'production'
 
-    - name: Executar o script generate-html.js (requer Node 22)
-      run: node src/generate-html.js
+    - name: Executar o script generate-html.js
+      run: node src/generate-html.js  # Executa o script para gerar o HTML
       env:
         GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
         GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}
         API_BASE_URL: ${{ secrets.API_BASE_URL }}
         API_KEY: ${{ secrets.API_KEY }}
-        NODE_ENV: production # Pode definir diretamente aqui também
-
-    - name: Upload do diretório 'public' como Artefato
-      uses: actions/upload-artifact@v4 # Use a versão mais recente
-      with:
-        name: site-output # Nome do artefato
-        path: public/ # Caminho para o diretório a ser carregado
-
-  # --- JOB 2: Deploy com Node 20 (LTS) ---
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build # Garante que o job 'build' termine com sucesso primeiro
-
-    steps:
-    - name: Check out o código (necessário para package.json se usar npx)
-      uses: actions/checkout@v3
-
-    - name: Configurar Node.js v20 (LTS)
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20' # Versão LTS estável
-        cache: 'npm'
-
-    - name: Instalar Netlify CLI
-      run: npm install -g netlify-cli
-
-    - name: Download do Artefato 'site-output'
-      uses: actions/download-artifact@v4
-      with:
-        name: site-output # Mesmo nome usado no upload
-        path: public # Baixa os arquivos para o diretório 'public'
+        NODE_ENV: ${{ env.NODE_ENV }}
 
     - name: Realizar deploy no Netlify
-      id: deploy_step # ID para referenciar outputs, se necessário
       env:
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }} # Use env var para o ID também
       run: |
+        # Linka o diretório ao site Netlify usando o ID
         netlify link --id ${{ secrets.NETLIFY_SITE_ID }}
+        
+        # Realiza o deploy no Netlify
         netlify deploy --prod --dir=public
