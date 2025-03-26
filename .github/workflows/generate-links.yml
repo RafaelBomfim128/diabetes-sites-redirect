@@ -52,10 +52,10 @@ jobs:
 
     steps:
     - name: Check out o código (necessário para package.json se usar npx)
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Configurar Node.js v20 (LTS)
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v3
       with:
         node-version: '20' # Versão LTS estável
         cache: 'npm'
