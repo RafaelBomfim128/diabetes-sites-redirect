@@ -60,5 +60,41 @@
             "description": "Outros tutoriais que podem te ajudar no dia a dia com as tecnologias no diabetes.",
             "image": "./img/icons/icon-outros.png"
         }
+    ],
+    "usefulContents": [
+        {
+            "category": "Área Kids no Diabetes",
+            "description": "Conteúdos voltados para crianças e adolescentes com diabetes.",
+            "image": "./img/icons/icon-area-kids-diabetes.png"
+        },
+        {
+            "category": "Cartões de Identificação",
+            "description": "Cartões de identificação para facilitar a identificação de pessoas com diabetes.",
+            "image": "./img/icons/icon-cartoes-identificacao.png"
+        },
+        {
+            "category": "Conscientização nas Escolas (para pais)",
+            "description": "Material para conscientização de professores e funcionários da escola sobre diabetes.",
+            "image": "./img/icons/icon-conscientizacao-escolas.png"
+        },
+        {
+            "category": "Diversos",
+            "description": "Conteúdos diversos que podem te ajudar no dia a dia com o diabetes.",
+            "image": "./img/icons/icon-diversos.png"
+        },
+        {
+            "category": "Educação em Diabetes",
+            "description": "Materiais educativos sobre diabetes.",
+            "image": "./img/icons/icon-educacao-diabetes.png"
+        },
+        {
+            "category": "Viagem de Avião",
+            "description": "Dicas para viajar de avião com diabetes.",
+            "image": "./img/icons/icon-viagem-aviao.png"
+        },
+        {
+            "category": "Ver tudo",
+            "description": "Todos os conteúdos úteis disponíveis no site."
+        }
     ]
 }
