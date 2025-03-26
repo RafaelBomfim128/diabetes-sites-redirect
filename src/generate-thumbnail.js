@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const pdfPoppler = require('pdf-poppler');
+const { pdfToPng } = require('pdf-to-png-converter');
 const sharp = require('sharp'); // Biblioteca para manipulação de imagens
 
 const pdfDir = path.join(__dirname, '../public/pdfs');
@@ -21,31 +21,21 @@ async function generateThumbnail(filePath) {
     }
 
     if (ext === '.pdf') {
-        // Geração de thumbnail para PDF
-        const opts = {
-            format: 'png',
-            out_dir: thumbnailDir,
-            out_prefix: fileName,
-            page: 1
-        };
-
         try {
-            await pdfPoppler.convert(filePath, opts);
+            await pdfToPng(filePath, {
+                disableFontFace: true, // When `false`, fonts will be rendered using a built-in font renderer that constructs the glyphs with primitive path commands. Default value is true.
+                useSystemFonts: true, // When `true`, fonts that aren't embedded in the PDF document will fallback to a system font. Default value is false.
+                enableXfa: false, // Render Xfa forms if any. Default value is false.
+                viewportScale: 2.0, // The desired scale of PNG viewport. Default value is 1.0 which means to display page on the existing canvas with 100% scale.
+                outputFolder: thumbnailDir, // Folder to write output PNG files. If not specified, PNG output will be available only as a Buffer content, without saving to a file.
+                outputFileMaskFunc: (pageNumber) => `${fileName}.png`, // Output filename mask function. Example: (pageNumber) => `page_${pageNumber}.png`
+                pagesToProcess: [1], // Subset of pages to convert (first page = 1), other pages will be skipped if specified.
+                strictPagesToProcess: true, // When `true`, will throw an error if specified page number in pagesToProcess is invalid, otherwise will skip invalid page. Default value is false.
+                verbosityLevel: 0, // Verbosity level. ERRORS: 0, WARNINGS: 1, INFOS: 5. Default value is 0.
+            });
 
-            // Verificar e renomear qualquer arquivo gerado com "-1", "-01", "-001", etc.
-            const generatedFiles = fs.readdirSync(thumbnailDir).filter(file =>
-                file.startsWith(fileName) && (file.endsWith('-1.png') || file.endsWith('-01.png') || file.endsWith('-001.png') || file.endsWith('-0001.png'))
-            );
-
-            if (generatedFiles.length > 0) {
-                const tempThumbnail = path.join(thumbnailDir, generatedFiles[0]);
-                fs.renameSync(tempThumbnail, outputThumbnail); // Renomeia para remover sufixos como "-1"
-                console.log(`Thumbnail gerado para o PDF: ${fileName}`);
-                return outputThumbnail;
-            } else {
-                console.error(`Nenhuma thumbnail encontrada para o PDF: ${fileName}`);
-                return null;
-            }
+            console.log(`Thumbnail gerado para o PDF: ${fileName}`);
+            return outputThumbnail;
         } catch (err) {
             console.error(`Erro ao gerar thumbnail para o PDF ${fileName}:`, err);
             return null;

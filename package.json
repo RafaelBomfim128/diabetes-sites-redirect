@@ -16,7 +16,7 @@
     "dotenv": "^16.4.7",
     "googleapis": "^144.0.0",
     "handlebars": "^4.7.8",
-    "pdf-poppler": "^0.2.1",
+    "pdf-to-png-converter": "^3.6.5",
     "sharp": "^0.33.5"
   }
 }
