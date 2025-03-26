@@ -38,7 +38,7 @@ async function generateThumbnail(filePath) {
             return outputThumbnail;
         } catch (err) {
             console.error(`Erro ao gerar thumbnail para o PDF ${fileName}:`, err);
-            return null;
+            process.exit(1);
         }
     } else if (['.png', '.jpg', '.jpeg'].includes(ext)) {
         // Geração de thumbnail para imagens (PNG, JPG, JPEG)
@@ -51,7 +51,7 @@ async function generateThumbnail(filePath) {
             return outputThumbnail;
         } catch (err) {
             console.error(`Erro ao gerar thumbnail para a imagem ${fileName}:`, err);
-            return null;
+            process.exit(1);
         }
     } else {
         console.log(`Tipo de arquivo não suportado: ${filePath}`);
@@ -109,7 +109,7 @@ async function generateAllThumbnails() {
         return categorizedData; // Retorna os dados categorizados
     } catch (err) {
         console.error('Erro ao processar os arquivos:', err);
-        return {};
+        process.exit(1);
     }
 }
 
