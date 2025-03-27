@@ -14,13 +14,13 @@ jobs:
     - name: Configurar Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '20'
+        node-version: '22'
 
     - name: Instalar dependências
       run: npm install
 
     - name: Instalar Netlify CLI
-      run: npm install -g netlify-cli
+      run: npm install -g netlify-cli@19.0.3
 
     - name: Definir variáveis de ambiente
       run: echo "NODE_ENV=production" >> $GITHUB_ENV  # Definir NODE_ENV como 'production'
