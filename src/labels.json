@@ -41,6 +41,11 @@
             "image": "./img/icons/icon-nightscout.png"
         },
         {
+            "category": "iOS",
+            "description": "Veja os tutoriais que temos para iOS.",
+            "image": "./img/icons/icon-ios.png"
+        },
+        {
             "category": "Relógios",
             "description": "Também é possível utilizar smartwatchs conectado às tecnologias para monitoramento da glicemia!",
             "image": "./img/icons/icon-relogios.png"
