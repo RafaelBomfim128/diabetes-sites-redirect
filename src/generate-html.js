@@ -99,13 +99,20 @@ async function main() {
     });
 
     const tutorialsTotal = [];
+    const addedShortPaths = new Set();
     for (let category in tutorialsFormatted) {
-        tutorialsTotal.push(...tutorialsFormatted[category]);
+        tutorialsFormatted[category].forEach(tutorial => {
+            if (!addedShortPaths.has(tutorial.shortPath)) {
+                tutorialsTotal.push(tutorial);
+                addedShortPaths.add(tutorial.shortPath);
+            }
+        });
+    
         generateHtml('template-tutoriais-item.html', `item-tutorial-${formatPath(category)}.html`, {
             links: tutorialsFormatted[category],
             title: category,
-            desc: labels.tutorials.find(item => item.category === category).description,
-            image: labels.tutorials.find(item => item.category === category).image,
+            desc: labels.tutorials.find(item => item.category === category)?.description || '',
+            image: labels.tutorials.find(item => item.category === category)?.image || '',
             apiBaseUrl,
             apiKey,
             mostRecentNotificationId,
