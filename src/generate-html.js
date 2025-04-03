@@ -296,19 +296,24 @@ function formatLinksDownloads(arrItemsSheet) {
 function formatLinksTutorials(arrItemsSheet) {
     const formattedObj = {};
 
-    arrItemsSheet.forEach(([title, shortPath, fullUrl, category]) => {
-        if (!title || !shortPath || !fullUrl || !category) return;
-        
-        if (!formattedObj[category]) {
-            formattedObj[category] = [];
-        }
-        
-        formattedObj[category].push({
-            title,
-            shortPath,
-            fullUrl,
-            category,
-            newLink: `${domainSite}${formatPath(shortPath)}`
+    arrItemsSheet.forEach(([title, shortPath, fullUrl, categories]) => {
+        if (!title || !shortPath || !fullUrl || !categories) return;
+
+        // Dividindo a string de categorias em um array
+        const categoryList = categories.split(',').map(cat => cat.trim());
+
+        categoryList.forEach(category => {
+            if (!formattedObj[category]) {
+                formattedObj[category] = [];
+            }
+
+            formattedObj[category].push({
+                title,
+                shortPath,
+                fullUrl,
+                category,
+                newLink: `${domainSite}${formatPath(shortPath)}`
+            });
         });
     });
 
