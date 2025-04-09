@@ -232,6 +232,18 @@ async function main() {
         mostRecentNotificationId,
         categories: pdfCategoriesPages
     });
+
+    generateHtml('template-ferramentas.html', 'ferramentas.html', {
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+    });
+
+    generateHtml('template-gerador-qr-code-juggluco.html', 'gerador-qr-code-juggluco.html', {
+        apiBaseUrl,
+        apiKey,
+        mostRecentNotificationId,
+    });
 }
 
 main().catch(error => {
