@@ -52,7 +52,11 @@ function closeNavOnClickOutside(event) {
     }
 }
 
-function copyLink(link, button) {
+function copyLink(link, button, completeLink = false) {
+    if (completeLink) {
+        const formattedLink = link.replace(/^\.\/+/, "");
+        link = window.location.origin + '/public/' + formattedLink;
+    }
     navigator.clipboard.writeText(link)
         .then(() => {
             button.style.backgroundColor = 'green';

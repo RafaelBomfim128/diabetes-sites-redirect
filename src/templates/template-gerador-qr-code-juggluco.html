@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tecnologias no Diabetes - Ferramentas</title>
+  <link rel="icon" type="image/png" href="./img/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="./img/favicon.svg" />
+  <link rel="shortcut icon" href="./img/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./img/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Tecnologias no Diabetes" />
+  <link rel="manifest" href="./img/site.webmanifest" />
+  <link rel="stylesheet" href="./css/geral.css">
+  <link rel="stylesheet" href="./css/gerador-qr-code-juggluco.css">
+</head>
+
+<body>
+  {{> view-counter }}
+  <div class="container"><br>
+    {{> menu }}
+    <a class="return-index" href="ferramentas.html">Retornar</a>
+    {{> notificacoes }}
+
+    <section>
+      <h2 class="category-title">
+        Gerador de QR Code para Sibionics com Juggluco 📷🔳
+        <span class="arrow"></span>
+      </h2>
+
+      <p>💡 Este é um método utilizado quando você está com dificuldades de ler o QR Code apresentado na caixa do
+        Sibionics com o Juggluco.</p>
+      <p>Deve ser feito em um computador, celular ou tablet diferente do celular que está sendo escaneado.</p>
+
+      <div style="text-align: center;">
+        <img alt="Local dos dígitos na caixa" src="./img/qr-code-sibionics.png" class="box-sibionics-model">
+      </div>
+
+      <p>De acordo com o local indicado na imagem acima, insira os dígitos correspondentes nos campos abaixo:</p>
+
+      <div class="category-content" id="content-qrcode">
+        <div class="qrcode-input">
+          <span>(</span>
+          <input type="text" id="qrInput1" size="1" maxlength="2" oninput="gerarQRCode()">
+          <span>)</span>
+          <input type="text" id="qrInput2" size="15" maxlength="18" placeholder="18 dígitos" oninput="gerarQRCode()">
+        </div>
+
+        <div class="qrcode-output">
+          <img id="qrCode" src="" alt="QR Code será exibido aqui">
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  {{> social-media }}
+  {{> footer }}
+  <script>
+    window.env = {
+      API_BASE_URL: "{{apiBaseUrl}}",
+      API_KEY: "{{apiKey}}",
+      MOST_RECENT_NOTIFICATION_ID: "{{mostRecentNotificationId}}"
+    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="./js/geral.js"></script>
+  <script src="./js/gerador-qr-code-juggluco.js"></script>
+</body>
+
+</html>
