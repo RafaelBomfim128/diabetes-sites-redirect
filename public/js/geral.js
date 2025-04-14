@@ -55,7 +55,7 @@ function closeNavOnClickOutside(event) {
 function copyLink(link, button, completeLink = false) {
     if (completeLink) {
         const formattedLink = link.replace(/^\.\/+/, "");
-        link = window.location.origin + '/public/' + formattedLink;
+        link = window.location.pathname.includes('/public/') ? window.location.origin + '/public/' + formattedLink : window.location.origin + '/' + formattedLink;
     }
     navigator.clipboard.writeText(link)
         .then(() => {
@@ -75,6 +75,7 @@ function copyLink(link, button, completeLink = false) {
             }, 3000);
         });
 }
+
 
 async function getDailyViews() {
     try {
