@@ -13,10 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "crypto-js": "^4.2.0",
-    "dotenv": "^16.4.7",
-    "googleapis": "^144.0.0",
+    "dotenv": "^16.5.0",
+    "googleapis": "^149.0.0",
     "handlebars": "^4.7.8",
     "pdf-to-png-converter": "^3.6.5",
-    "sharp": "^0.33.5"
+    "sharp": "^0.34.2"
   }
 }
