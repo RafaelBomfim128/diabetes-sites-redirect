@@ -1,5 +1,5 @@
 [build]
-  command = "node src/generate-html.js"
+  command = "node src/main.js"
   publish = "public"
 
 [environment]

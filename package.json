@@ -2,11 +2,13 @@
   "name": "diabetes-sites-redirect",
   "version": "1.0.0",
   "description": "",
-  "main": "generate-html.js",
+  "main": "main.js",
   "scripts": {
-    "dev": "env NODE_ENV=development node src/generate-html.js",
-    "prod": "env NODE_ENV=production node src/generate-html.js",
-    "read_only": "env NODE_ENV=read_only node src/generate-html.js"
+    "dev": "env NODE_ENV=development node src/main.js",
+    "prod": "env NODE_ENV=production node src/main.js",
+    "read_only": "env NODE_ENV=read_only node src/main.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +20,9 @@
     "handlebars": "^4.7.8",
     "pdf-to-png-converter": "^3.6.5",
     "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^30.0.0"
   }
 }
