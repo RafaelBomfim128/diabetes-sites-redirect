@@ -1,10 +1,10 @@
-name: Gerar Links
+name: Deploy Site
 
 on:
   workflow_dispatch:
 
 jobs:
-  generate_links:
+  deploy_site:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,8 +25,8 @@ jobs:
     - name: Definir variáveis de ambiente
       run: echo "NODE_ENV=production" >> $GITHUB_ENV  # Definir NODE_ENV como 'production'
 
-    - name: Executar o script generate-html.js
-      run: node src/generate-html.js  # Executa o script para gerar o HTML
+    - name: Executar o script main.js
+      run: node src/main.js  # Executa o script para gerar o HTML
       env:
         GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
         GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}

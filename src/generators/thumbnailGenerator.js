@@ -3,8 +3,8 @@ const path = require('path');
 const { pdfToPng } = require('pdf-to-png-converter');
 const sharp = require('sharp'); // Biblioteca para manipulação de imagens
 
-const pdfDir = path.join(__dirname, '../public/pdfs');
-const thumbnailDir = path.join(__dirname, '../public/img/thumbnails/Geradas dinamicamente');
+const pdfDir = path.join(__dirname, '../../public/pdfs');
+const thumbnailDir = path.join(__dirname, '../../public/img/thumbnails/Geradas dinamicamente');
 
 if (!fs.existsSync(thumbnailDir)) {
     fs.mkdirSync(thumbnailDir, { recursive: true });
